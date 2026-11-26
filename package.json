@@ -5,9 +5,11 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build --config astro.cloudflare.config.mjs",
+    "build:pages": "astro build --config astro.pages.config.mjs",
     "build:node": "astro build",
     "start": "node --env-file-if-exists=.env dist/server/entry.mjs",
     "preview:worker": "wrangler dev",
+    "preview:pages": "wrangler pages dev ./dist-pages --compatibility-date=2026-11-26 --compatibility-flag=nodejs_compat --compatibility-flag=global_fetch_strictly_public",
     "check": "astro check",
     "import:inventario": "node scripts/import-inventory.mjs"
   },

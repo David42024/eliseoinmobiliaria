@@ -1,6 +1,6 @@
 # Elíseo Inmobiliaria · La Nueva Estancia
 
-Primera versión del sitio comercial de La Nueva Estancia. Astro genera las páginas como HTML estático. El endpoint de solicitudes funciona en Cloudflare Workers y en el servidor Node local. El visor de lotes de desarrollo contiene datos ficticios identificados en pantalla. La compilación usa la consulta comercial mientras el inventario oficial esté desactivado.
+Primera versión del sitio comercial de La Nueva Estancia. Astro genera las páginas como HTML estático. El endpoint de solicitudes funciona en Cloudflare Pages, Cloudflare Workers y en el servidor Node local. El visor de lotes de desarrollo contiene datos ficticios identificados en pantalla. La compilación usa la consulta comercial mientras el inventario oficial esté desactivado.
 
 ## Instalación y despliegue
 
@@ -15,6 +15,22 @@ npm start
 ```
 
 En desarrollo, abre `http://localhost:4321`. Detén el servidor de desarrollo antes de arrancar la compilación en el mismo puerto. Copia `.env.example` a `.env` para habilitar integraciones. Define `SITE_URL` con el origen público HTTPS antes de compilar. Así se generan URLs canónicas, metadatos sociales y las entradas del sitemap. Con el dominio sin configurar, el sitio incluye directivas para evitar la indexación.
+
+### Cloudflare Pages
+
+En Workers & Pages, crea un proyecto de **Pages** e importa el repositorio de GitHub.
+
+| Campo en Pages | Valor |
+| --- | --- |
+| Project name | `eliseoinmobiliaria` |
+| Production branch | `main` |
+| Build command | `npm run build:pages` |
+| Build output directory | `dist-pages` |
+| Root directory | Raíz del repositorio |
+
+Usa **Settings → Variables and Secrets** para configurar el dominio con `SITE_URL=https://eliseoinmobiliaria.pages.dev` en producción. Si Pages asigna otra URL, usa el valor que figure en el panel. Para la compilación se recomienda Node 24. Agrega las flags de compatibilidad `nodejs_compat` y `global_fetch_strictly_public` para las funciones de producción y vista previa. El archivo `wrangler.jsonc` de la raíz corresponde a Workers. Pages usa su configuración del panel. [Configuración de Cloudflare Pages](https://developers.cloudflare.com/pages/configuration/build-configuration/) · [Variables y funciones](https://developers.cloudflare.com/pages/functions/bindings/)
+
+Para probar localmente, ejecuta `npm run build:pages` y `npm run preview:pages`. La compilación conserva `_worker.js` y `_routes.json` para el endpoint de solicitudes.
 
 ### Cloudflare Workers
 
