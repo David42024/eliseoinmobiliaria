@@ -1,10 +1,20 @@
 ---
 import { ChevronRight } from './icons';
-const { title, section, description } = Astro.props as { title: string; section: string; description: string };
+interface Props {
+  title: string;
+  section: string;
+  description: string;
+  parent?: { label: string; href: string };
+}
+const { title, section, description, parent } = Astro.props;
 ---
-<section class="page-intro">
+<section class:list={['page-intro', { 'detail-intro': parent }]}>
   <div class="wrap">
-    <div class="breadcrumb"><a href="/">Inicio</a><ChevronRight size={15} /><span aria-current="page">{section}</span></div>
+    <nav class="breadcrumb" aria-label="Ruta de navegación">
+      <a href="/">Inicio</a><ChevronRight size={15} aria-hidden="true" />
+      {parent && <><a href={parent.href}>{parent.label}</a><ChevronRight size={15} aria-hidden="true" /></>}
+      <span aria-current="page">{section}</span>
+    </nav>
     <h1>{title}</h1>
     <p>{description}</p>
   </div>

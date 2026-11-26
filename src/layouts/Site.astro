@@ -7,6 +7,10 @@ import '../styles/site.css';
 interface Props { title: string; description: string; noindex?: boolean }
 const { title, description, noindex = false } = Astro.props;
 const path = Astro.url.pathname;
+const navLinks = navigation.map(([label, href]) => ({
+  label, href,
+  current: path === href ? 'page' as const : path.startsWith(href) ? 'location' as const : undefined,
+}));
 const canonical = Astro.site ? new URL(path, Astro.site) : undefined;
 const ga4 = import.meta.env.PROD && /^G-[A-Z0-9]+$/.test(import.meta.env.PUBLIC_GA4_ID ?? '') ? import.meta.env.PUBLIC_GA4_ID : '';
 const privacy = legalLink('privacidad');
@@ -19,6 +23,9 @@ const claims = legalLink('reclamaciones');
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#153126" />
+    <style is:inline media="(prefers-reduced-motion: no-preference)">
+      @view-transition { navigation: auto; }
+    </style>
     {(!Astro.site || noindex) && <meta name="robots" content="noindex, follow" />}
     {canonical && <link rel="canonical" href={canonical} />}
     <meta property="og:type" content="website" />
@@ -41,14 +48,14 @@ const claims = legalLink('reclamaciones');
           <span><strong>ELÍSEO</strong><small>INMOBILIARIA</small></span>
         </a>
         <nav class="desktop-nav" aria-label="Navegación principal">
-          {navigation.map(([label, href]) => <a href={href} aria-current={path === href ? 'page' : undefined}>{label}</a>)}
+          {navLinks.map(({ label, href, current }) => <a href={href} aria-current={current}>{label}</a>)}
         </nav>
         <a class="button header-visit" href="/contacto/?finalidad=visita">Solicitar visita</a>
         <details class="mobile-nav">
           <summary aria-label="Menú principal"><Menu size={23} /><span>Menú</span></summary>
           <nav aria-label="Navegación móvil">
             <a href="/" aria-current={path === '/' ? 'page' : undefined}>Inicio</a>
-            {navigation.map(([label, href]) => <a href={href} aria-current={path === href ? 'page' : undefined}>{label}</a>)}
+            {navLinks.map(({ label, href, current }) => <a href={href} aria-current={current}>{label}</a>)}
           </nav>
         </details>
       </div>

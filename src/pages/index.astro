@@ -3,7 +3,7 @@ import { Building, CalendarDays, MapPin } from '../components/icons';
 import Site from '../layouts/Site.astro';
 import Typologies from '../components/Typologies.astro';
 import VisitBanner from '../components/VisitBanner.astro';
-import { project } from '../data/project';
+import { project, spacePath } from '../data/project';
 import { priceLabel, publicPrice } from '../data/commercial';
 import { media } from '../data/media';
 const price = publicPrice('project', project.id);
@@ -57,7 +57,7 @@ const price = publicPrice('project', project.id);
         <h2>Frente a la Av. Huamán</h2>
         <p>En Víctor Larco, cerca del óvalo La Marina y con conexión a las principales vías de Trujillo.</p>
         <p>La propuesta urbana contempla servicios, parques y áreas verdes, además de espacios de recreación y educación.</p>
-        <div class="button-row"><a class="button outline" href="/ubicacion/">Ver ubicación</a><a class="text-link" href="/proyecto/">Conocer el proyecto</a></div>
+        <div class="button-row"><a class="button outline" href="/ubicacion/">Ver ubicación</a><a class="text-link" href={spacePath(project.spaces[0])}>Ver parques y áreas verdes</a></div>
       </div>
     </div>
   </section>

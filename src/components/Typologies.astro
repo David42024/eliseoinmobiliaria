@@ -1,9 +1,8 @@
 ---
 import { Building, House, PanelsTopLeft } from './icons';
-import { project, inquiry } from '../data/project';
+import { project, inquiry, typologyPath } from '../data/project';
 import { publicPrice, priceLabel } from '../data/commercial';
 import { media } from '../data/media';
-import Gallery from './Gallery.astro';
 const { expanded = false } = Astro.props;
 const icons = { lot: PanelsTopLeft, apartment: Building, house: House };
 ---
@@ -17,25 +16,13 @@ const icons = { lot: PanelsTopLeft, apartment: Building, house: House };
         <h3>{type.label}</h3>
         <p>{type.description}</p>
         {(detail?.area || 'area' in type) && <p class="type-area">{detail?.area || ('area' in type ? type.area : '')}</p>}
-        {expanded && (
-          <div class="property-detail">
-            <p>{detail?.availability || 'Disponibilidad por consultar'}</p>
-            {type.icon !== 'lot' && (detail?.bedrooms || detail?.bathrooms) && (
-              <dl class="property-rooms">
-                {detail.bedrooms && <div><dt>Dormitorios</dt><dd>{detail.bedrooms}</dd></div>}
-                {detail.bathrooms && <div><dt>Baños</dt><dd>{detail.bathrooms}</dd></div>}
-              </dl>
-            )}
-            {((detail?.renders?.length || 0) > 0 || detail?.floorPlan) && (
-              <Gallery pictures={[...(detail?.renders || []), ...(detail?.floorPlan ? [detail.floorPlan] : [])]} />
-            )}
-          </div>
-        )}
+        {expanded && <p class="property-detail">{detail?.availability || 'Disponibilidad por consultar'}</p>}
         <div class="type-end">
           <strong>{priceLabel(publicPrice('typology', type.id))}</strong>
-          <a class="text-link" href={expanded ? inquiry('financiamiento', { tipo: type.id }) : `/tipologias/#${type.id}`}>
-            {expanded ? 'Solicitar cotización' : 'Ver tipología'}
-          </a>
+          <div class="type-links">
+            <a class={expanded ? 'button outline' : 'text-link'} href={typologyPath(type)}>Ver {type.label.toLocaleLowerCase('es-PE')}</a>
+            {expanded && <a class="text-link" aria-label={`Cotizar ${type.singular.toLocaleLowerCase('es-PE')}`} href={inquiry('financiamiento', { tipo: type.id })}>Cotizar</a>}
+          </div>
         </div>
       </article>
     );

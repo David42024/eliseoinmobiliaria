@@ -1,0 +1,33 @@
+---
+import type { InferGetStaticPropsType } from 'astro';
+import { GraduationCap, Route, Trees } from '../../components/icons';
+import PageIntro from '../../components/PageIntro.astro';
+import Site from '../../layouts/Site.astro';
+import { project, spacePath } from '../../data/project';
+
+export function getStaticPaths() {
+  return project.spaces.map(space => ({ params: { espacio: space.slug }, props: { space } }));
+}
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { space } = Astro.props;
+const Icon = { trees: Trees, education: GraduationCap, route: Route }[space.icon];
+---
+<Site title={`${space.label} | La Nueva Estancia · Elíseo`} description={space.description}>
+  <PageIntro title={space.label} section={space.label} description={space.description} parent={{ label: 'Proyecto', href: '/proyecto/' }} />
+  <div class="section wrap detail-layout">
+    <div class="space-topics">
+      {space.topics.map(topic => <section><h2>{topic.title}</h2><p>{topic.text}</p></section>)}
+    </div>
+    <aside class="space-panel" aria-labelledby="estado-proyecto">
+      <Icon size={54} stroke-width={1.1} aria-hidden="true" />
+      <h2 id="estado-proyecto">Preventa sobre planos</h2>
+      <a href={space.action.href} class="button light">{space.action.label}</a>
+    </aside>
+  </div>
+  <section class="related-section"><div class="wrap">
+    <h2>Otros aspectos del proyecto</h2>
+    <ul class="related-links">
+      {project.spaces.filter(other => other.slug !== space.slug).map(other => <li><a class="button outline" href={spacePath(other)}>{other.label}</a></li>)}
+    </ul>
+  </div></section>
+</Site>

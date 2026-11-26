@@ -4,9 +4,10 @@ import Site from '../layouts/Site.astro';
 import PageIntro from '../components/PageIntro.astro';
 import VisitBanner from '../components/VisitBanner.astro';
 import Gallery from '../components/Gallery.astro';
-import { project } from '../data/project';
+import { project, spacePath, typologyPath } from '../data/project';
 import { media } from '../data/media';
 const totalHomes = String(project.totals.homes).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+const icons = { trees: Trees, education: GraduationCap, route: Route };
 ---
 <Site title="El proyecto | La Nueva Estancia · Elíseo" description="Conoce la propuesta de habilitación urbana de La Nueva Estancia en Víctor Larco, sus cifras, espacios proyectados y fecha de entrega anunciada.">
   <PageIntro title="La Nueva Estancia" section="Proyecto" description="Una habilitación urbana residencial frente a la Av. Huamán, en el distrito de Víctor Larco, Trujillo." />
@@ -17,18 +18,28 @@ const totalHomes = String(project.totals.homes).replace(/\B(?=(\d{3})+(?!\d))/g,
       <div><strong>{totalHomes}</strong><span>Viviendas</span></div>
       <div><strong>{project.totals.parking}</strong><span>Estacionamientos</span></div>
     </div>
-    <p class="lot-breakdown">{project.typologies.map(type => `${type.lotCount} lotes para ${type.icon === 'lot' ? 'vivienda unifamiliar' : type.icon === 'apartment' ? 'vivienda multifamiliar' : 'conjunto residencial'}`).join(' · ')}</p>
+    <ul class="lot-breakdown">
+      {project.typologies.map(type => <li><a href={typologyPath(type)} class="text-link">{type.lotCount} lotes para {type.plotUse}</a></li>)}
+    </ul>
     <div class="type-grid project-benefits">
-      <article class="type-card"><Trees size={30} /><h3>Parques y áreas verdes</h3><p>La habilitación prevé parques, señalización y mobiliario urbano.</p></article>
-      <article class="type-card"><GraduationCap size={30} /><h3>Recreación y educación</h3><p>El diseño urbano destina espacios para recreación, educación y otros usos.</p></article>
-      <article class="type-card"><Route size={30} /><h3>Servicios y conexión vial</h3><p>El proyecto contempla servicios urbanos y se ubica cerca del óvalo La Marina, con conexión hacia la Panamericana Norte.</p></article>
+      {project.spaces.map(space => {
+        const Icon = icons[space.icon];
+        return (
+          <article class="type-card">
+            <Icon size={30} aria-hidden="true" />
+            <h3>{space.label}</h3>
+            <p>{space.description}</p>
+            <div class="type-end"><a href={spacePath(space)} class="text-link">Ver {space.label.toLocaleLowerCase('es-PE')}</a></div>
+          </article>
+        );
+      })}
     </div>
   </section>
   {media.gallery.length > 0 && <section class="section wrap"><h2>Galería del proyecto</h2><Gallery pictures={media.gallery} /></section>}
   <section class="section location-home" id="entrega">
     <div class="wrap split">
       <div><p class="eyebrow">Etapa comercial</p><h2>Preventa sobre planos</h2></div>
-      <div><p>La entrega está anunciada para <strong>julio de 2027</strong>. Consulta con Elíseo el estado actual del proyecto y las condiciones comerciales.</p><a class="text-link" href="/avance/">Consultar avance de obra</a></div>
+      <div><p>La entrega está anunciada para <strong>{project.delivery.toLocaleLowerCase('es-PE')}</strong>. Consulta con Elíseo el estado actual del proyecto y las condiciones comerciales.</p><a class="text-link" href="/avance/">Consultar avance de obra</a></div>
     </div>
   </section>
   <VisitBanner />
