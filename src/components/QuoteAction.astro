@@ -1,0 +1,12 @@
+---
+import { inquiry, project } from '../data/project';
+
+interface Props { class?: string; type?: string; lot?: string; demo?: boolean }
+const { class: classes = 'button', type, lot, demo = false } = Astro.props;
+const label = project.typologies.find(item => item.id === type)?.singular;
+const interest = [label, lot && `Lote ${lot}${demo ? ' (demostración)' : ''}`].filter(Boolean).join(' · ');
+const params = { ...(type && { tipo: type }), ...(lot && { lote: lot }) };
+---
+<a class={classes} href={`${inquiry('financiamiento', params)}#canales-cotizacion`} data-quote-open data-quote-interest={interest}>
+  <slot />
+</a>

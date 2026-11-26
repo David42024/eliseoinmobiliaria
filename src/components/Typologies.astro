@@ -1,6 +1,7 @@
 ---
 import { Building, House, PanelsTopLeft } from './icons';
-import { project, inquiry, typologyPath } from '../data/project';
+import QuoteAction from './QuoteAction.astro';
+import { project, typologyPath } from '../data/project';
 import { publicPrice, priceLabel } from '../data/commercial';
 import { media, type Picture } from '../data/media';
 const { expanded = false } = Astro.props;
@@ -35,9 +36,9 @@ const references = {
             {price && <strong>{priceLabel(price)}</strong>}
             <div class="type-links">
               <a class="button outline compact" href={typologyPath(type)}>Ver {type.label.toLocaleLowerCase('es-PE')}</a>
-              <a class="button soft compact" href={inquiry('financiamiento', { tipo: type.id })}>
+              <QuoteAction class="button soft compact" type={type.id}>
                 {price ? 'Cotizar' : 'Consultar precio'}<span class="sr-only"> · {type.singular}</span>
-              </a>
+              </QuoteAction>
             </div>
           </div>
         </div>

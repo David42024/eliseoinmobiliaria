@@ -105,7 +105,7 @@ Para cambiar la imagen referencial de una tarjeta, define `typologies.<id>.cardI
 
 El asistente envía cada consulta y hasta dos turnos recientes a Groq. Edita `content/asistente.md` con información pública que el equipo comercial pueda confirmar. Configura `GROQ_API_KEY` como secreto de ejecución en **Cloudflare Pages → Settings → Variables and Secrets → Production** y vuelve a desplegar. En Node local usa `.env`. Si el servicio no responde, el chat deriva a WhatsApp. [Secretos de Pages](https://developers.cloudflare.com/pages/functions/bindings/#secrets)
 
-El cotizador ofrece WhatsApp y un formulario de correo en `src/components/QuoteEmailForm.astro`. El formulario envía a Formspree con la tipología o lote seleccionados. El destinatario se configura en **Workflow → Email** en el panel de Formspree. [Cambiar el destinatario](https://help.formspree.io/articles/form-and-project-settings/changing-a-form-email-address)
+Las acciones de cotización abren un formulario en la página del proyecto, la tipología o el visor de lotes. El mismo formulario está disponible en Financiamiento. `src/components/QuoteEmailForm.astro` envía a Formspree con el proyecto y la selección del visitante. El destinatario se configura en **Workflow → Email** en el panel de Formspree. [Cambiar el destinatario](https://help.formspree.io/articles/form-and-project-settings/changing-a-form-email-address)
 
 Configura en `content/legal.json` la URL oficial o la lista de párrafos aprobados de cada página. Para un Libro de Reclamaciones alojado en otro servicio usa `url` hacia el canal oficial. El formulario requiere un enlace de privacidad y `PUBLIC_LEAD_FORM=true` al compilar. Mientras se configura, los CTA funcionan vía WhatsApp con el contexto de la solicitud.
 

@@ -1,5 +1,6 @@
 ---
 import SocialIcon from './SocialIcon.astro';
+import { ChevronRight, Mail } from './icons';
 import QuoteEmailForm from './QuoteEmailForm.astro';
 import { contact, project, salesMessage, wap } from '../data/project';
 import { legalLink } from '../data/legal';
@@ -62,7 +63,14 @@ const defaultMessage = salesMessage(mode === 'quote' ? 'cotizacion' : 'informaci
     </form>
   ) : <p>{mode === 'quote' ? 'Elige cómo pedir el precio vigente y las opciones de pago.' : 'Escríbenos por WhatsApp. Un asesor te contactará para coordinar tu visita.'}</p>}
   <div class="contact-channels" id={mode === 'quote' ? 'canales-cotizacion' : undefined} tabindex={mode === 'quote' ? '-1' : undefined}>
-    {mode === 'quote' && <QuoteEmailForm privacy={privacy} />}
+    {mode === 'quote' && <details class="quote-email">
+      <summary>
+        <Mail size={22} aria-hidden="true" />
+        <span><strong>Cotizar por correo</strong><small>Envía tu solicitud desde aquí</small></span>
+        <ChevronRight class="quote-chevron" size={18} aria-hidden="true" />
+      </summary>
+      <QuoteEmailForm />
+    </details>}
     {order.map((number, index) => (
       <a data-channel={number} data-whatsapp href={wap(defaultMessage, number)} target="_blank" rel="noopener noreferrer">
         <SocialIcon name="whatsapp" size={22} />
@@ -79,3 +87,12 @@ const defaultMessage = salesMessage(mode === 'quote' ? 'cotizacion' : 'informaci
   import { setupLead } from '../scripts/leads';
   document.querySelectorAll<HTMLElement>('[data-lead]').forEach(setupLead);
 </script>
+<style>
+  .quote-email { min-width: 0; border: 1px solid #c7d2c2; border-radius: 7px; background: #f2f5ed; }
+  .quote-email:hover, .quote-email[open] { border-color: var(--leaf); }
+  summary { display: flex; gap: .7rem; align-items: center; padding: .62rem .85rem; list-style: none; border-radius: 7px; }
+  summary::-webkit-details-marker { display: none; }
+  .quote-chevron { margin-inline-start: auto; transform: rotate(90deg); }
+  .quote-email[open] .quote-chevron { transform: rotate(-90deg); }
+  .quote-email > :global(.quote-form) { margin: 0; padding: .9rem .85rem; border-top: 1px solid #c7d2c2; }
+</style>

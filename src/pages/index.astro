@@ -3,6 +3,7 @@ import { Building, CalendarDays, ChevronRight, MapPin } from '../components/icon
 import Site from '../layouts/Site.astro';
 import Gallery from '../components/Gallery.astro';
 import ProjectMap from '../components/ProjectMap.astro';
+import QuoteAction from '../components/QuoteAction.astro';
 import Typologies from '../components/Typologies.astro';
 import VisitBanner from '../components/VisitBanner.astro';
 import { project, spacePath } from '../data/project';
@@ -10,7 +11,7 @@ import { priceLabel, publicPrice } from '../data/commercial';
 import { media } from '../data/media';
 const price = publicPrice('project', project.id);
 ---
-<Site title="La Nueva Estancia en Víctor Larco | Elíseo Inmobiliaria" description="Explora lotes, departamentos y casas de La Nueva Estancia, un proyecto en preventa frente a la Av. Huamán, Víctor Larco, Trujillo.">
+<Site title="La Nueva Estancia en Víctor Larco | Elíseo Inmobiliaria" description="Explora lotes, departamentos y casas de La Nueva Estancia, un proyecto en preventa frente a la Av. Huamán, Víctor Larco, Trujillo." quoteDialog>
   <section class:list={['hero', { 'hero-with-photo': media.cover }]}>
     <div class="wrap hero-grid">
       <div class="hero-copy">
@@ -21,7 +22,7 @@ const price = publicPrice('project', project.id);
         <div class="button-row">
           <a href="/tipologias/#visor" class="button light">Explorar lotes</a>
           <a href="/contacto/?finalidad=visita" class="button on-dark">Solicitar visita</a>
-          {!price && <a href="/financiamiento/" class="button on-dark">Consultar precio</a>}
+          <QuoteAction class="button on-dark">{price ? 'Solicitar cotización' : 'Consultar precio'}</QuoteAction>
         </div>
       </div>
       {media.cover ? (

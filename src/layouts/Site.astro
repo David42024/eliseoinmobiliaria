@@ -1,13 +1,14 @@
 ---
 import { Clock, Mail, MapPin, Menu } from '../components/icons';
+import QuoteDialog from '../components/QuoteDialog.astro';
 import SalesChat from '../components/SalesChat.astro';
 import SocialIcon from '../components/SocialIcon.astro';
 import { navigation, project, contact, wap } from '../data/project';
 import { legalLink } from '../data/legal';
 import '../styles/site.css';
 
-interface Props { title: string; description: string; noindex?: boolean }
-const { title, description, noindex = false } = Astro.props;
+interface Props { title: string; description: string; noindex?: boolean; quoteDialog?: boolean }
+const { title, description, noindex = false, quoteDialog = false } = Astro.props;
 const path = Astro.url.pathname;
 const navLinks = navigation.map(([label, href]) => ({
   label, href,
@@ -61,7 +62,7 @@ const claims = legalLink('reclamaciones');
         </details>
       </div>
     </header>
-    <main id="contenido"><slot /></main>
+    <main id="contenido"><slot />{quoteDialog && <QuoteDialog />}</main>
     <footer class="site-footer">
       <div class="wrap footer-top">
         <div class="footer-brand">

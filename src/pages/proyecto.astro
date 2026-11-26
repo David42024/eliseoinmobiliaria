@@ -2,6 +2,7 @@
 import { ChevronRight, GraduationCap, Route, Trees } from '../components/icons';
 import Site from '../layouts/Site.astro';
 import PageIntro from '../components/PageIntro.astro';
+import QuoteAction from '../components/QuoteAction.astro';
 import VisitBanner from '../components/VisitBanner.astro';
 import Gallery from '../components/Gallery.astro';
 import { project, spacePath, typologyPath } from '../data/project';
@@ -9,10 +10,13 @@ import { media } from '../data/media';
 const totalHomes = String(project.totals.homes).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 const icons = { trees: Trees, education: GraduationCap, route: Route };
 ---
-<Site title="El proyecto | La Nueva Estancia · Elíseo" description="Conoce la propuesta de habilitación urbana de La Nueva Estancia en Víctor Larco, sus cifras, espacios proyectados y fecha de entrega anunciada.">
+<Site title="El proyecto | La Nueva Estancia · Elíseo" description="Conoce la propuesta de habilitación urbana de La Nueva Estancia en Víctor Larco, sus cifras, espacios proyectados y fecha de entrega anunciada." quoteDialog>
   <PageIntro title="La Nueva Estancia" section="Proyecto" description="Una habilitación urbana residencial frente a la Av. Huamán, en el distrito de Víctor Larco, Trujillo." />
   <section class="section wrap">
-    <div class="section-heading"><div><p class="eyebrow">El desarrollo</p><h2>Qué contempla el proyecto</h2></div></div>
+    <div class="section-heading">
+      <div><p class="eyebrow">El desarrollo</p><h2>Qué contempla el proyecto</h2></div>
+      <QuoteAction>Cotizar el proyecto</QuoteAction>
+    </div>
     <div class="stats-grid">
       <div><strong>{project.totals.lots}</strong><span>Lotes</span></div>
       <div><strong>{totalHomes}</strong><span>Viviendas</span></div>
