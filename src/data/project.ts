@@ -15,21 +15,21 @@ export const project = {
   totals: { lots: 340, homes: 1217, parking: 609 },
   typologies: [
     {
-      id: 'lote-unifamiliar', slug: 'lotes-unifamiliares', label: 'Lotes unifamiliares', singular: 'Lote unifamiliar',
+      id: 'lote-unifamiliar', slug: 'lotes-unifamiliares', label: 'Lote unifamiliar', singular: 'Lote unifamiliar',
       lotCount: 241, plotUse: 'vivienda unifamiliar', area: '162 a 324 m²', icon: 'lot',
       description: 'Terrenos para diseñar y construir una vivienda propia.',
       detailHeading: 'Elige el terreno para tu vivienda',
       detail: 'Al comparar lotes, considera la superficie, la orientación y la ubicación dentro de la urbanización. El equipo de ventas puede confirmar qué opciones están disponibles.',
     },
     {
-      id: 'departamento-multifamiliar', slug: 'departamentos', label: 'Departamentos', singular: 'Departamento multifamiliar',
+      id: 'departamento-multifamiliar', slug: 'departamentos', label: 'Departamento multifamiliar', singular: 'Departamento multifamiliar',
       lotCount: 67, plotUse: 'vivienda multifamiliar', icon: 'apartment',
       description: 'Viviendas proyectadas en edificios multifamiliares.',
       detailHeading: 'Vivienda en edificios multifamiliares',
       detail: 'La habilitación destina parte de sus lotes a vivienda multifamiliar. Si te interesa un departamento, consulta al equipo de ventas por superficies, distribución y disponibilidad de unidades.',
     },
     {
-      id: 'casa-conjunto', slug: 'casas-en-conjunto', label: 'Casas en conjunto', singular: 'Casa en conjunto residencial',
+      id: 'casa-conjunto', slug: 'casas-en-conjunto', label: 'Casa en conjunto residencial', singular: 'Casa en conjunto residencial',
       lotCount: 32, plotUse: 'conjuntos residenciales', icon: 'house',
       description: 'Viviendas proyectadas en conjuntos residenciales.',
       detailHeading: 'Casas dentro de un conjunto residencial',

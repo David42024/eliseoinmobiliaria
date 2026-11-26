@@ -8,9 +8,9 @@ La propuesta contempla 340 lotes proyectados, parques, áreas verdes, espacios d
 
 ## Tipologías
 
-- Lotes unifamiliares. Terrenos de 162 a 324 m² para diseñar y construir una vivienda propia. El plan incluye 241 lotes destinados a ese uso.
-- Departamentos. Viviendas proyectadas en edificios multifamiliares, con 67 lotes destinados a ese uso. La cifra se refiere a lotes y no al número de departamentos disponibles.
-- Casas en conjunto. Viviendas proyectadas dentro de conjuntos residenciales, con 32 lotes destinados a ese uso. El equipo comercial confirma superficies, distribución y disponibilidad.
+- Lote unifamiliar. Terrenos de 162 a 324 m² para diseñar y construir una vivienda propia. El plan incluye 241 lotes destinados a ese uso.
+- Departamento multifamiliar. Viviendas proyectadas en edificios multifamiliares, con 67 lotes destinados a ese uso. La cifra se refiere a lotes y no al número de departamentos disponibles.
+- Casa en conjunto residencial. Viviendas proyectadas dentro de conjuntos residenciales, con 32 lotes destinados a ese uso. El equipo comercial confirma superficies, distribución y disponibilidad.
 
 ## Cotizaciones y visitas
 
