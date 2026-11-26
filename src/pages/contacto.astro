@@ -1,21 +1,46 @@
 ---
-import { Clock, Mail, MapPin } from '../components/icons';
+import { ArrowUpRight, Clock, Mail, MapPin } from '../components/icons';
 import Site from '../layouts/Site.astro';
 import PageIntro from '../components/PageIntro.astro';
 import LeadForm from '../components/LeadForm.astro';
-import QuoteAction from '../components/QuoteAction.astro';
 import { contact, project } from '../data/project';
 ---
 <Site title="Contacto y visitas | La Nueva Estancia · Elíseo" description="Solicita una visita a La Nueva Estancia o conversa con Elíseo por WhatsApp. Consulta la dirección y el horario de la oficina de ventas." quoteDialog>
-  <PageIntro title="Contacto y visitas" section="Contacto" description="Un asesor de Elíseo puede orientarte sobre el proyecto y coordinar tu visita." />
-  <section class="section wrap split">
-    <div class="contact-info">
-      <p class="eyebrow">Atención comercial</p><h2>Oficina de ventas</h2>
-      <p><MapPin size={21} /> {project.address}, {project.district}.</p>
-      <p><Clock size={21} /> {contact.hours}</p>
-      <p><Mail size={21} /> <a href={`mailto:${contact.email}`}>{contact.email}</a></p>
-      <div class="button-row"><a class="text-link" href={project.mapLink} target="_blank" rel="noopener noreferrer">Cómo llegar</a><QuoteAction class="text-link">Solicitar cotización</QuoteAction></div>
-    </div>
+  <PageIntro title="Contacto y visitas" section="Contacto" description="Comunícate con el equipo de ventas de La Nueva Estancia en Víctor Larco." />
+  <section class="section wrap contact-layout">
     <LeadForm />
+    <section class="office-panel" aria-labelledby="office-title">
+      <h2 id="office-title">Oficina de ventas</h2>
+      <dl class="office-details">
+        <div>
+          <dt><MapPin size={20} aria-hidden="true" /> Dirección</dt>
+          <dd>{project.address}, {project.district}.</dd>
+        </div>
+        <div>
+          <dt><Clock size={20} aria-hidden="true" /> Horario de atención</dt>
+          <dd>{contact.hours}</dd>
+        </div>
+        <div>
+          <dt><Mail size={20} aria-hidden="true" /> Correo de ventas</dt>
+          <dd><a href={`mailto:${contact.email}`}>{contact.email}</a></dd>
+        </div>
+      </dl>
+      <a class="button outline" href={project.mapLink} target="_blank" rel="noopener noreferrer">
+        Cómo llegar en Google Maps <ArrowUpRight size={17} aria-hidden="true" />
+      </a>
+    </section>
   </section>
 </Site>
+
+<style>
+  .contact-layout { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); align-items: start; gap: clamp(1.25rem, 3.5vw, 3rem); }
+  .office-panel { min-width: 0; padding: clamp(1.25rem, 3.6vw, 2.6rem); border: 1px solid #cbd5c5; border-radius: 12px; background: var(--soft); }
+  .office-panel h2 { font-size: clamp(1.75rem, 3.25vw, 2.75rem); }
+  .office-details { margin: 1rem 0 1.15rem; }
+  .office-details > div { padding: .72rem 0; border-bottom: 1px solid #cbd5c5; }
+  .office-details dt { display: flex; align-items: center; gap: .55rem; font-weight: 700; }
+  .office-details svg { color: var(--leaf); }
+  .office-details dd { margin: .18rem 0 0 calc(20px + .55rem); color: var(--ink-muted); overflow-wrap: anywhere; }
+  .office-details a { text-decoration-thickness: 1px; text-underline-offset: .22em; }
+  @media (max-width: 760px) { .contact-layout { grid-template-columns: minmax(0, 1fr); } }
+</style>

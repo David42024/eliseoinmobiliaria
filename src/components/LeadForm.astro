@@ -1,6 +1,7 @@
 ---
 import SocialIcon from './SocialIcon.astro';
-import { ChevronRight, Mail } from './icons';
+import { CalendarDays, ChevronRight, Mail } from './icons';
+import QuoteAction from './QuoteAction.astro';
 import QuoteEmailForm from './QuoteEmailForm.astro';
 import { contact, project, salesMessage, wap } from '../data/project';
 import { legalLink } from '../data/legal';
@@ -20,11 +21,43 @@ const lots = inventory?.lots.map(lot => ({
 })) || [];
 const order = [contact.numbers[contact.primary], ...contact.numbers.filter((_, index) => index !== contact.primary)];
 const displayNumber = (number: string) => `+51 ${number.slice(2, 5)} ${number.slice(5, 8)} ${number.slice(8)}`;
-const defaultMessage = salesMessage(mode === 'quote' ? 'cotizacion' : 'informacion');
+const defaultMessage = salesMessage('cotizacion');
 ---
 <section class="lead-panel" data-lead data-mode={mode} data-lots={JSON.stringify(lots)} data-types={JSON.stringify(types)}
   data-initial={mode === 'quote' ? financing.initial : null} data-terms={mode === 'quote' && installmentTerms ? JSON.stringify(installmentTerms) : undefined}>
-  <h2>{mode === 'quote' ? 'Solicita una cotización' : 'Habla con Elíseo'}</h2>
+  <h2>{mode === 'quote' ? 'Solicita una cotización' : 'Elige cómo contactarnos'}</h2>
+  {mode === 'contact' && (
+    <>
+      <section class="contact-method" aria-labelledby="contact-email-title">
+        <h3 id="contact-email-title">Por correo</h3>
+        <QuoteAction class="contact-choice contact-choice-primary">
+          <span class="contact-choice-icon"><Mail size={22} aria-hidden="true" /></span>
+          <span><strong>Solicitar cotización</strong><small>Envía el formulario desde esta página</small></span>
+          <ChevronRight size={18} aria-hidden="true" />
+        </QuoteAction>
+      </section>
+      <section class="contact-method" aria-labelledby="contact-whatsapp-title">
+        <h3 id="contact-whatsapp-title">Por WhatsApp</h3>
+        <div class="contact-actions">
+          <a class="contact-choice" href={wap(salesMessage('visita'), order[0])} target="_blank" rel="noopener noreferrer" data-whatsapp>
+            <span class="contact-choice-icon"><CalendarDays size={22} aria-hidden="true" /></span>
+            <span><strong>Agendar una visita</strong><small>Coordina el día y la hora con un asesor</small></span>
+            <ChevronRight size={18} aria-hidden="true" />
+          </a>
+          <a class="contact-choice" href={wap()} target="_blank" rel="noopener noreferrer" data-whatsapp>
+            <span class="contact-choice-icon"><SocialIcon name="whatsapp" size={22} /></span>
+            <span><strong>Hacer una consulta</strong><small>Ventas · {displayNumber(order[0])}</small></span>
+            <ChevronRight size={18} aria-hidden="true" />
+          </a>
+        </div>
+        {order.slice(1).map(number => (
+          <a class="contact-alternate" href={wap(undefined, number)} target="_blank" rel="noopener noreferrer" data-whatsapp>
+            WhatsApp alternativo · {displayNumber(number)}
+          </a>
+        ))}
+      </section>
+    </>
+  )}
   <p data-selection-summary hidden></p>
   <div data-simulator hidden>
     <dl class="quote-result">
@@ -61,27 +94,25 @@ const defaultMessage = salesMessage(mode === 'quote' ? 'cotizacion' : 'informaci
       <p data-feedback class="form-feedback" role="status"></p>
       <noscript><p>Para enviar este formulario, activa JavaScript o usa uno de los canales de contacto.</p></noscript>
     </form>
-  ) : <p>{mode === 'quote' ? 'Elige cómo pedir el precio vigente y las opciones de pago.' : 'Escríbenos por WhatsApp. Un asesor te contactará para coordinar tu visita.'}</p>}
-  <div class="contact-channels" id={mode === 'quote' ? 'canales-cotizacion' : undefined} tabindex={mode === 'quote' ? '-1' : undefined}>
-    {mode === 'quote' && <details class="quote-email">
-      <summary>
-        <Mail size={22} aria-hidden="true" />
-        <span><strong>Cotizar por correo</strong><small>Envía tu solicitud desde aquí</small></span>
-        <ChevronRight class="quote-chevron" size={18} aria-hidden="true" />
-      </summary>
-      <QuoteEmailForm />
-    </details>}
-    {order.map((number, index) => (
-      <a data-channel={number} data-whatsapp href={wap(defaultMessage, number)} target="_blank" rel="noopener noreferrer">
-        <SocialIcon name="whatsapp" size={22} />
-        {mode === 'quote' ? (
+  ) : mode === 'quote' && <p>Elige cómo pedir el precio vigente y las opciones de pago.</p>}
+  {mode === 'quote' && (
+    <div class="contact-channels" id="canales-cotizacion" tabindex="-1">
+      <details class="quote-email">
+        <summary>
+          <Mail size={22} aria-hidden="true" />
+          <span><strong>Cotizar por correo</strong><small>Envía tu solicitud desde aquí</small></span>
+          <ChevronRight class="quote-chevron" size={18} aria-hidden="true" />
+        </summary>
+        <QuoteEmailForm />
+      </details>
+      {order.map((number, index) => (
+        <a data-channel={number} data-whatsapp href={wap(defaultMessage, number)} target="_blank" rel="noopener noreferrer">
+          <SocialIcon name="whatsapp" size={22} />
           <span><strong>{index === 0 ? 'Cotizar por WhatsApp' : 'WhatsApp alternativo'}</strong><small>{displayNumber(number)}</small></span>
-        ) : (
-          <span><strong>{displayNumber(number)}</strong><small>{index === 0 ? 'WhatsApp de ventas' : 'WhatsApp alternativo'}</small></span>
-        )}
-      </a>
-    ))}
-  </div>
+        </a>
+      ))}
+    </div>
+  )}
 </section>
 <script>
   import { setupLead } from '../scripts/leads';
