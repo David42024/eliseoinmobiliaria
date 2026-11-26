@@ -1,0 +1,85 @@
+---
+import { ChevronRight, Mail } from './icons';
+import { project } from '../data/project';
+
+interface Props { privacy?: string }
+const { privacy } = Astro.props;
+---
+<details class="quote-email">
+  <summary>
+    <Mail size={22} aria-hidden="true" />
+    <span><strong>Cotizar por correo</strong><small>Envía tu solicitud desde aquí</small></span>
+    <ChevronRight class="quote-chevron" size={18} aria-hidden="true" />
+  </summary>
+  <form action="https://formspree.io/f/mwlozaov" method="post" data-quote-email aria-describedby="quote-privacy">
+    <input type="hidden" name="subject" value={`Solicitud de cotización · ${project.name}`} />
+    <input type="hidden" name="proyecto" value={project.name} />
+    <input type="hidden" name="interes" value="Sin preferencia" data-quote-context />
+    <input type="text" name="_gotcha" hidden tabindex="-1" autocomplete="off" />
+    <label>Nombre completo<input name="name" autocomplete="name" required maxlength="100" /></label>
+    <label>Correo para responderte<input name="email" type="email" autocomplete="email" required maxlength="150" /></label>
+    <label>¿Qué te gustaría cotizar? <small>(opcional)</small>
+      <textarea name="message" rows="3" maxlength="1000" placeholder="Cuéntanos qué información necesitas"></textarea>
+    </label>
+    <noscript><p>Si tienes una tipología o un lote en mente, indícalo en tu mensaje.</p></noscript>
+    <p id="quote-privacy">Tu solicitud se envía a través de Formspree. Usaremos tus datos para responderte.{privacy && <> <a href={privacy}>Política de privacidad</a></>}</p>
+    <button class="button compact" type="submit">Enviar solicitud</button>
+    <p class="form-feedback" data-quote-feedback role="status"></p>
+  </form>
+</details>
+
+<script>
+  import { track } from '../scripts/analytics';
+
+  for (const form of document.querySelectorAll<HTMLFormElement>('[data-quote-email]')) {
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const feedback = form.querySelector<HTMLElement>('[data-quote-feedback]')!;
+
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (submit.disabled) return;
+      const fields = new FormData(form);
+      submit.disabled = true;
+      feedback.textContent = 'Enviando solicitud…';
+      try {
+        const response = await fetch(form.action, {
+          method: form.method,
+          body: fields,
+          headers: { Accept: 'application/json' },
+          signal: AbortSignal.timeout(15_000),
+        });
+        if (response.status === 429) {
+          feedback.textContent = 'El formulario está recibiendo muchas solicitudes. Inténtalo más tarde o escríbenos por WhatsApp.';
+          return;
+        }
+        if (!response.ok || !response.headers.get('Content-Type')?.includes('application/json')) throw new Error();
+        const result = await response.json();
+        if (!result || result.ok === false || result.errors?.length) throw new Error();
+        form.reset();
+        feedback.textContent = 'Recibimos tu solicitud. El equipo de Elíseo te responderá al correo que ingresaste.';
+        track('quote_confirmed');
+      } catch {
+        feedback.textContent = 'No pudimos confirmar el envío. Puedes revisar tus datos, reintentar o escribirnos por WhatsApp.';
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  }
+</script>
+
+<style>
+  .quote-email {
+    min-width: 0;
+    border: 1px solid #c7d2c2;
+    border-radius: 7px;
+    background: #f2f5ed;
+  }
+  .quote-email:hover, .quote-email[open] { border-color: var(--leaf); }
+  summary { display: flex; gap: .7rem; align-items: center; padding: .62rem .85rem; list-style: none; border-radius: 7px; }
+  summary::-webkit-details-marker { display: none; }
+  .quote-chevron { margin-inline-start: auto; transform: rotate(90deg); }
+  .quote-email[open] .quote-chevron { transform: rotate(-90deg); }
+  .quote-email form { margin: 0; padding: .9rem .85rem; border-top: 1px solid #c7d2c2; }
+  .quote-email textarea { display: block; width: 100%; resize: vertical; padding: .55rem .65rem; border: 1px solid #aebbab; border-radius: 7px; color: var(--forest); background: #fff; font: inherit; }
+  #quote-privacy { font-size: .86rem; }
+</style>

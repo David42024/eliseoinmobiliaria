@@ -1,7 +1,7 @@
 ---
 import SocialIcon from './SocialIcon.astro';
-import { Mail } from './icons';
-import { contact, project, quoteMail, salesMessage, wap } from '../data/project';
+import QuoteEmailForm from './QuoteEmailForm.astro';
+import { contact, project, salesMessage, wap } from '../data/project';
 import { legalLink } from '../data/legal';
 import { inventory, official } from '../data/inventory';
 import { publicPrice, financing, installmentTerms } from '../data/commercial';
@@ -62,10 +62,7 @@ const defaultMessage = salesMessage(mode === 'quote' ? 'cotizacion' : 'informaci
     </form>
   ) : <p>{mode === 'quote' ? 'Elige cómo pedir el precio vigente y las opciones de pago.' : 'Escríbenos por WhatsApp. Un asesor te contactará para coordinar tu visita.'}</p>}
   <div class="contact-channels" id={mode === 'quote' ? 'canales-cotizacion' : undefined} tabindex={mode === 'quote' ? '-1' : undefined}>
-    {mode === 'quote' && <a data-quote-email href={quoteMail(defaultMessage)}>
-      <Mail size={22} aria-hidden="true" />
-      <span><strong>Cotizar por correo</strong><small>{contact.email}</small></span>
-    </a>}
+    {mode === 'quote' && <QuoteEmailForm privacy={privacy} />}
     {order.map((number, index) => (
       <a data-channel={number} data-whatsapp href={wap(defaultMessage, number)} target="_blank" rel="noopener noreferrer">
         <SocialIcon name="whatsapp" size={22} />

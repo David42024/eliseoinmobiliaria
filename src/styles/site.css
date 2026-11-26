@@ -291,9 +291,9 @@ input:not([type=checkbox]), select { width: 100%; min-height: 44px; color: var(-
 .lead-panel form, .lead-panel > label { margin-top: 1rem; }
 .lead-panel form { display: grid; gap: .82rem; }
 .contact-channels { margin-top: 1.2rem; display: grid; gap: .55rem; }
-.contact-channels a { display: flex; align-items: center; gap: .7rem; padding: .62rem .85rem; border: 1px solid #c7d2c2; border-radius: 7px; text-decoration: none; background: #f2f5ed; }
-.contact-channels a:hover { border-color: var(--leaf); }
-.contact-channels span { display: grid; min-width: 0; overflow-wrap: anywhere; }
+.contact-channels > a { display: flex; align-items: center; gap: .7rem; padding: .62rem .85rem; border: 1px solid #c7d2c2; border-radius: 7px; text-decoration: none; background: #f2f5ed; }
+.contact-channels > a:hover { border-color: var(--leaf); }
+.contact-channels > a span, .contact-channels summary span { display: grid; min-width: 0; overflow-wrap: anywhere; }
 .contact-channels small { color: var(--ink-muted); font-size: .88rem; }
 .trap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 .consent-check { display: flex; align-items: start; gap: .5rem; font-weight: 400; }
