@@ -1,5 +1,5 @@
 ---
-import { Building, CalendarDays, MapPin } from '../components/icons';
+import { Building, CalendarDays, ChevronRight, MapPin } from '../components/icons';
 import Site from '../layouts/Site.astro';
 import Gallery from '../components/Gallery.astro';
 import ProjectMap from '../components/ProjectMap.astro';
@@ -39,9 +39,9 @@ const price = publicPrice('project', project.id);
   </section>
   <section class="factbar" aria-label="Datos del proyecto">
     <div class="wrap fact-grid">
-      <a href="/ubicacion/"><MapPin /><span><small>Ubicación</small><strong>Av. Huamán, Víctor Larco</strong></span></a>
-      <a href="/proyecto/"><Building /><span><small>Habilitación urbana</small><strong>{project.totals.lots} lotes proyectados</strong></span></a>
-      <a href="/proyecto/#entrega"><CalendarDays /><span><small>Entrega anunciada</small><strong>{project.delivery}</strong></span></a>
+      <a href="/ubicacion/"><MapPin aria-hidden="true" /><span><small>Ubicación</small><strong>Av. Huamán, Víctor Larco</strong></span><ChevronRight class="fact-arrow" aria-hidden="true" /></a>
+      <a href="/proyecto/"><Building aria-hidden="true" /><span><small>Habilitación urbana</small><strong>{project.totals.lots} lotes proyectados</strong></span><ChevronRight class="fact-arrow" aria-hidden="true" /></a>
+      <a href="/proyecto/#entrega"><CalendarDays aria-hidden="true" /><span><small>Entrega anunciada</small><strong>{project.delivery}</strong></span><ChevronRight class="fact-arrow" aria-hidden="true" /></a>
     </div>
   </section>
   <section class="section wrap">

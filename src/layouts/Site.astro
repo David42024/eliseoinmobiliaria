@@ -11,7 +11,7 @@ const { title, description, noindex = false } = Astro.props;
 const path = Astro.url.pathname;
 const navLinks = navigation.map(([label, href]) => ({
   label, href,
-  current: path === href ? 'page' as const : path.startsWith(href) ? 'location' as const : undefined,
+  current: path === href ? 'page' as const : href !== '/' && path.startsWith(href) ? 'location' as const : undefined,
 }));
 const canonical = Astro.site ? new URL(path, Astro.site) : undefined;
 const ga4 = import.meta.env.PROD && /^G-[A-Z0-9]+$/.test(import.meta.env.PUBLIC_GA4_ID ?? '') ? import.meta.env.PUBLIC_GA4_ID : '';
@@ -56,7 +56,6 @@ const claims = legalLink('reclamaciones');
         <details class="mobile-nav">
           <summary aria-label="Menú principal"><Menu size={23} /><span>Menú</span></summary>
           <nav aria-label="Navegación móvil">
-            <a href="/" aria-current={path === '/' ? 'page' : undefined}>Inicio</a>
             {navLinks.map(({ label, href, current }) => <a href={href} aria-current={current}>{label}</a>)}
           </nav>
         </details>

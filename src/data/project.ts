@@ -90,7 +90,7 @@ export const contact = {
 };
 
 export const navigation = [
-  ['Proyecto', '/proyecto/'], ['Tipologías', '/tipologias/'], ['Ubicación', '/ubicacion/'],
+  ['Inicio', '/'], ['Proyecto', '/proyecto/'], ['Tipologías', '/tipologias/'], ['Ubicación', '/ubicacion/'],
   ['Tour 360°', '/tour/'], ['Avance', '/avance/'], ['Financiamiento', '/financiamiento/'],
   ['Nosotros', '/nosotros/'], ['Contacto', '/contacto/'],
 ] as const;

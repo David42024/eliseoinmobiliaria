@@ -1,5 +1,5 @@
 ---
-import { GraduationCap, Route, Trees } from '../components/icons';
+import { ChevronRight, GraduationCap, Route, Trees } from '../components/icons';
 import Site from '../layouts/Site.astro';
 import PageIntro from '../components/PageIntro.astro';
 import VisitBanner from '../components/VisitBanner.astro';
@@ -19,17 +19,30 @@ const icons = { trees: Trees, education: GraduationCap, route: Route };
       <div><strong>{project.totals.parking}</strong><span>Estacionamientos</span></div>
     </div>
     <ul class="lot-breakdown">
-      {project.typologies.map(type => <li><a href={typologyPath(type)} class="text-link">{type.lotCount} lotes para {type.plotUse}</a></li>)}
+      {project.typologies.map(type => (
+        <li>
+          <a href={typologyPath(type)}>
+            <span><strong>{type.lotCount} lotes</strong> para {type.plotUse}</span>
+            <ChevronRight size={19} aria-hidden="true" />
+          </a>
+        </li>
+      ))}
     </ul>
-    <div class="type-grid project-benefits">
+    <div class="type-grid">
       {project.spaces.map(space => {
         const Icon = icons[space.icon];
         return (
           <article class="type-card">
-            <Icon size={30} aria-hidden="true" />
-            <h3>{space.label}</h3>
-            <p>{space.description}</p>
-            <div class="type-end"><a href={spacePath(space)} class="button outline compact">Ver {space.label.toLocaleLowerCase('es-PE')}</a></div>
+            <div class="type-copy">
+              <span class="type-icon"><Icon size={25} aria-hidden="true" /></span>
+              <h3>{space.label}</h3>
+              <p>{space.description}</p>
+              <div class="type-end">
+                <a href={spacePath(space)} class="button outline compact">
+                  Ver {space.label.toLocaleLowerCase('es-PE')} <ChevronRight size={17} aria-hidden="true" />
+                </a>
+              </div>
+            </div>
           </article>
         );
       })}

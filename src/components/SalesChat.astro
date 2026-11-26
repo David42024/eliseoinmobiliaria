@@ -1,13 +1,15 @@
 ---
-import { MessageCircle } from './icons';
+import { MessageCircleMore } from './icons';
 import SocialIcon from './SocialIcon.astro';
 import { wap } from '../data/project';
 ---
 <button class="chat-open button" type="button" aria-controls="sales-chat" aria-haspopup="dialog" data-chat-open hidden>
-  <MessageCircle size={20} aria-hidden="true" /> Asistente
+  <span class="chat-mark"><MessageCircleMore size={24} stroke-width={2} aria-hidden="true" /></span>
+  Asistente
 </button>
 <dialog class="sales-chat" id="sales-chat" aria-labelledby="sales-chat-title">
   <header>
+    <span class="chat-mark"><MessageCircleMore size={24} stroke-width={2} aria-hidden="true" /></span>
     <div><strong id="sales-chat-title">Asistente de Elíseo</strong><small>La Nueva Estancia</small></div>
     <button class="chat-close" type="button" aria-label="Cerrar el asistente" data-chat-close>×</button>
   </header>
@@ -98,7 +100,8 @@ import { wap } from '../data/project';
 </script>
 
 <style>
-  .chat-open { min-height: 50px; border-radius: 999px; padding-inline: .95rem; box-shadow: 0 5px 19px #15312640; }
+  .chat-open { min-height: 50px; border-radius: 999px; padding: .3rem .95rem .3rem .35rem; gap: .5rem; box-shadow: 0 5px 19px #15312640; }
+  .chat-mark { display: grid; flex: none; width: 36px; height: 36px; place-items: center; border-radius: 50%; background: #cee5b5; color: var(--forest); }
   .sales-chat {
     inset: auto max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) auto;
     margin: 0;
@@ -115,6 +118,7 @@ import { wap } from '../data/project';
   .sales-chat[open] { display: flex; flex-direction: column; }
   .sales-chat::backdrop { background: #10261b55; }
   header { display: flex; justify-content: space-between; gap: .5rem; align-items: center; padding: .75rem .95rem; background: var(--forest); color: var(--white); line-height: 1.35; }
+  header > div { flex: 1; }
   header small { display: block; color: #c3d7be; }
   .chat-close { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid #64816f; border-radius: 50%; background: #284a3a; color: inherit; font: 600 1.5rem/1 var(--sans); }
   .chat-messages { padding: .85rem; height: min(290px, 42dvh); overflow: auto; overscroll-behavior: contain; }

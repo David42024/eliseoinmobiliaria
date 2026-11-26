@@ -11,7 +11,7 @@ export { default as Image } from '@lucide/astro/icons/image';
 export { default as Mail } from '@lucide/astro/icons/mail';
 export { default as MapPin } from '@lucide/astro/icons/map-pin';
 export { default as Menu } from '@lucide/astro/icons/menu';
-export { default as MessageCircle } from '@lucide/astro/icons/message-circle';
+export { default as MessageCircleMore } from '@lucide/astro/icons/message-circle-more';
 export { default as Minus } from '@lucide/astro/icons/minus';
 export { default as PanelsTopLeft } from '@lucide/astro/icons/panels-top-left';
 export { default as Play } from '@lucide/astro/icons/play';
