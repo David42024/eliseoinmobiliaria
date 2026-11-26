@@ -1,6 +1,7 @@
 ---
 import SocialIcon from './SocialIcon.astro';
-import { contact, project, salesMessage, wap } from '../data/project';
+import { Mail } from './icons';
+import { contact, project, quoteMail, salesMessage, wap } from '../data/project';
 import { legalLink } from '../data/legal';
 import { inventory, official } from '../data/inventory';
 import { publicPrice, financing, installmentTerms } from '../data/commercial';
@@ -18,6 +19,7 @@ const lots = inventory?.lots.map(lot => ({
 })) || [];
 const order = [contact.numbers[contact.primary], ...contact.numbers.filter((_, index) => index !== contact.primary)];
 const displayNumber = (number: string) => `+51 ${number.slice(2, 5)} ${number.slice(5, 8)} ${number.slice(8)}`;
+const defaultMessage = salesMessage(mode === 'quote' ? 'cotizacion' : 'informacion');
 ---
 <section class="lead-panel" data-lead data-mode={mode} data-lots={JSON.stringify(lots)} data-types={JSON.stringify(types)}
   data-initial={mode === 'quote' ? financing.initial : null} data-terms={mode === 'quote' && installmentTerms ? JSON.stringify(installmentTerms) : undefined}>
@@ -27,8 +29,7 @@ const displayNumber = (number: string) => `+51 ${number.slice(2, 5)} ${number.sl
     <dl class="quote-result">
       <div><dt>Precio</dt><dd>
         <span data-quote-price hidden></span>
-        <a class="button soft compact" data-quote-inquiry data-channel={order[0]} data-whatsapp
-          href={wap(salesMessage('cotizacion'))} target="_blank" rel="noopener noreferrer">Consultar precio</a>
+        <a class="button soft compact" data-quote-inquiry href="#canales-cotizacion">Consultar precio</a>
       </dd></div>
       <div data-initial-row hidden><dt>Cuota inicial</dt><dd data-quote-initial></dd></div>
       <div data-initial-row hidden><dt>Saldo</dt><dd data-quote-balance></dd></div>
@@ -57,13 +58,22 @@ const displayNumber = (number: string) => `+51 ${number.slice(2, 5)} ${number.sl
       <label class="consent-check"><input type="checkbox" name="consent" required /><span>Acepto el tratamiento de mis datos según la <a href={privacy}>Política de privacidad</a>.</span></label>
       <button type="submit" class="button" disabled>Enviar solicitud</button>
       <p data-feedback class="form-feedback" role="status"></p>
-      <noscript><p>Para enviar este formulario, activa JavaScript o comunícate por WhatsApp.</p></noscript>
+      <noscript><p>Para enviar este formulario, activa JavaScript o usa uno de los canales de contacto.</p></noscript>
     </form>
-  ) : <p>{mode === 'quote' ? 'Pide el precio vigente y orientación sobre las opciones de pago por WhatsApp.' : 'Escríbenos por WhatsApp. Un asesor te contactará para coordinar tu visita.'}</p>}
-  <div class="contact-channels">
+  ) : <p>{mode === 'quote' ? 'Elige cómo pedir el precio vigente y las opciones de pago.' : 'Escríbenos por WhatsApp. Un asesor te contactará para coordinar tu visita.'}</p>}
+  <div class="contact-channels" id={mode === 'quote' ? 'canales-cotizacion' : undefined} tabindex={mode === 'quote' ? '-1' : undefined}>
+    {mode === 'quote' && <a data-quote-email href={quoteMail(defaultMessage)}>
+      <Mail size={22} aria-hidden="true" />
+      <span><strong>Cotizar por correo</strong><small>{contact.email}</small></span>
+    </a>}
     {order.map((number, index) => (
-      <a data-channel={number} data-whatsapp href={wap(undefined, number)} target="_blank" rel="noopener noreferrer">
-        <SocialIcon name="whatsapp" size={22} /> <span><strong>{displayNumber(number)}</strong><small>{index === 0 ? 'WhatsApp de ventas' : 'WhatsApp alternativo'}</small></span>
+      <a data-channel={number} data-whatsapp href={wap(defaultMessage, number)} target="_blank" rel="noopener noreferrer">
+        <SocialIcon name="whatsapp" size={22} />
+        {mode === 'quote' ? (
+          <span><strong>{index === 0 ? 'Cotizar por WhatsApp' : 'WhatsApp alternativo'}</strong><small>{displayNumber(number)}</small></span>
+        ) : (
+          <span><strong>{displayNumber(number)}</strong><small>{index === 0 ? 'WhatsApp de ventas' : 'WhatsApp alternativo'}</small></span>
+        )}
       </a>
     ))}
   </div>

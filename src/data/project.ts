@@ -110,6 +110,12 @@ export const demoLotMessage = (id: string) =>
 export const wap = (message = salesMessage(), number = contact.numbers[contact.primary]) =>
   `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 
+export function quoteMail(message = salesMessage('cotizacion')) {
+  const subject = encodeURIComponent(`Solicitud de cotización · ${project.name}`);
+  const body = encodeURIComponent(message.replace(/\r?\n/g, '\r\n'));
+  return `mailto:${contact.email}?subject=${subject}&body=${body}`;
+}
+
 export const inquiry = (page: 'contacto' | 'financiamiento', options: { tipo?: string; lote?: string; finalidad?: string } = {}) => {
   const params = new URLSearchParams(Object.entries(options));
   return `/${page}/${params.size ? `?${params}` : ''}`;

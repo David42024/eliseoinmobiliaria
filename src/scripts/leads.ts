@@ -1,5 +1,5 @@
 import { track, attribution } from './analytics';
-import { demoLotMessage, salesMessage, wap } from '../data/project';
+import { demoLotMessage, quoteMail, salesMessage, wap } from '../data/project';
 
 type Lot = { id: string; type: string; demo: boolean; amount?: number };
 type Type = { id: string; label: string; amount?: number; from?: boolean };
@@ -17,6 +17,7 @@ export function setupLead(root: HTMLElement) {
   const simulator = root.querySelector<HTMLElement>('[data-simulator]')!;
   const quotePrice = root.querySelector<HTMLElement>('[data-quote-price]')!;
   const quoteInquiry = root.querySelector<HTMLAnchorElement>('[data-quote-inquiry]')!;
+  const quoteEmail = root.querySelector<HTMLAnchorElement>('[data-quote-email]');
   const form = root.querySelector<HTMLFormElement>('[data-form]');
   const feedback = root.querySelector<HTMLElement>('[data-feedback]');
   const submit = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
@@ -58,6 +59,7 @@ export function setupLead(root: HTMLElement) {
       put('[data-installment-label]', `Cuota estimada a ${months} meses · TEA ${annualEffectiveRate} %`);
     }
     const message = lot?.demo ? demoLotMessage(lot.id) : salesMessage(purpose, context);
+    if (quoteEmail) quoteEmail.href = quoteMail(message);
     root.querySelectorAll<HTMLAnchorElement>('[data-channel]').forEach(link => {
       link.href = wap(message, link.dataset.channel);
     });
