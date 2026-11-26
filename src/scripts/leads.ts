@@ -17,7 +17,7 @@ export function setupLead(root: HTMLElement) {
   const simulator = root.querySelector<HTMLElement>('[data-simulator]')!;
   const quotePrice = root.querySelector<HTMLElement>('[data-quote-price]')!;
   const quoteInquiry = root.querySelector<HTMLAnchorElement>('[data-quote-inquiry]')!;
-  const quoteContext = root.querySelector<HTMLInputElement>('[data-quote-context]');
+  const quoteContext = mode === 'quote' ? root.querySelector<HTMLInputElement>('[data-quote-context]') : null;
   const form = root.querySelector<HTMLFormElement>('[data-form]');
   const feedback = root.querySelector<HTMLElement>('[data-feedback]');
   const submit = form?.querySelector<HTMLButtonElement>('button[type="submit"]');

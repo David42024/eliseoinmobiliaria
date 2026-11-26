@@ -2,14 +2,14 @@
 import { legalLink } from '../data/legal';
 import { project } from '../data/project';
 
-interface Props { id?: string }
-const { id = 'formulario-cotizacion' } = Astro.props;
+interface Props { id?: string; interest?: string }
+const { id = 'formulario-cotizacion', interest = 'Sin preferencia' } = Astro.props;
 const privacy = legalLink('privacidad');
 ---
 <form class="quote-form" id={id} action="https://formspree.io/f/mwlozaov" method="post" data-quote-email aria-describedby={`${id}-privacidad`}>
   <input type="hidden" name="subject" value={`Solicitud de cotización · ${project.name}`} />
   <input type="hidden" name="proyecto" value={project.name} />
-  <input type="hidden" name="interes" value="Sin preferencia" data-quote-context />
+  <input type="hidden" name="interes" value={interest} data-quote-context />
   <input type="text" name="_gotcha" hidden tabindex="-1" autocomplete="off" />
   <label>Nombre completo<input name="name" autocomplete="name" required maxlength="100" /></label>
   <label>Correo para responderte<input name="email" type="email" autocomplete="email" required maxlength="150" /></label>

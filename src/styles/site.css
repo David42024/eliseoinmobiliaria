@@ -304,11 +304,8 @@ input:not([type=checkbox]), select { width: 100%; min-height: 44px; color: var(-
   background: #f2f5ed; border: 1px solid #c7d2c2; border-radius: 9px;
   text-decoration: none; line-height: 1.35; transition: background-color .15s ease, border-color .15s ease;
 }
-.contact-choice-primary { border-color: #a8c4aa; background: #e2eedf; }
 .contact-choice:hover { background: #e8efdf; border-color: var(--leaf); }
-.contact-choice-primary:hover { background: #d8e8d4; }
 .contact-choice-icon { display: grid; place-items: center; width: 38px; height: 38px; color: var(--forest); background: #e1ebd9; border-radius: 8px; }
-.contact-choice-primary .contact-choice-icon { background: var(--leaf); color: var(--white); }
 .contact-choice small { display: block; margin-top: .18rem; color: var(--ink-muted); font-size: .86rem; }
 .contact-alternate { display: inline-flex; align-items: center; min-height: 44px; margin-top: .5rem; font-size: .87rem; text-underline-offset: .2em; }
 .trap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }

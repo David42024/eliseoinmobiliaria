@@ -1,7 +1,6 @@
 ---
 import SocialIcon from './SocialIcon.astro';
 import { CalendarDays, ChevronRight, Mail } from './icons';
-import QuoteAction from './QuoteAction.astro';
 import QuoteEmailForm from './QuoteEmailForm.astro';
 import { contact, project, salesMessage, wap } from '../data/project';
 import { legalLink } from '../data/legal';
@@ -30,11 +29,8 @@ const defaultMessage = salesMessage('cotizacion');
     <>
       <section class="contact-method" aria-labelledby="contact-email-title">
         <h3 id="contact-email-title">Por correo</h3>
-        <QuoteAction class="contact-choice contact-choice-primary">
-          <span class="contact-choice-icon"><Mail size={22} aria-hidden="true" /></span>
-          <span><strong>Solicitar cotización</strong><small>Envía el formulario desde esta página</small></span>
-          <ChevronRight size={18} aria-hidden="true" />
-        </QuoteAction>
+        <p>Envíanos tu solicitud de cotización y te responderemos por correo.</p>
+        <QuoteEmailForm interest={project.name} />
       </section>
       <section class="contact-method" aria-labelledby="contact-whatsapp-title">
         <h3 id="contact-whatsapp-title">Por WhatsApp</h3>
