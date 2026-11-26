@@ -3,7 +3,7 @@ import Site from '../layouts/Site.astro';
 import PageIntro from '../components/PageIntro.astro';
 import Typologies from '../components/Typologies.astro';
 import LotViewer from '../components/LotViewer.astro';
-import { project, typologyPath, wap } from '../data/project';
+import { project, salesMessage, typologyPath, wap } from '../data/project';
 import { inventory, demo } from '../data/inventory';
 import { publicPrice, priceLabel } from '../data/commercial';
 ---
@@ -21,7 +21,7 @@ import { publicPrice, priceLabel } from '../data/commercial';
         <h3>Consulta los lotes del proyecto</h3>
         <p>El plano maestro y el inventario vigente aún no están disponibles en línea. Un asesor puede orientarte sobre las opciones de {project.name}.</p>
         <div class="button-row">
-          <a class="button" data-whatsapp href={wap('Hola, quisiera consultar la disponibilidad de lotes de La Nueva Estancia.')} target="_blank" rel="noopener noreferrer">Consultar disponibilidad</a>
+          <a class="button" data-whatsapp href={wap(salesMessage('informacion', 'los lotes unifamiliares'))} target="_blank" rel="noopener noreferrer">Consultar disponibilidad</a>
           <a class="text-link" href={typologyPath(project.typologies[0])}>Ver lotes unifamiliares</a>
         </div>
       </div>

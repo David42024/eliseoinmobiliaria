@@ -1,4 +1,5 @@
 import { track, attribution } from './analytics';
+import { demoLotMessage, salesMessage, wap } from '../data/project';
 
 type Lot = { id: string; type: string; demo: boolean; amount?: number };
 type Type = { id: string; label: string; amount?: number; from?: boolean };
@@ -56,11 +57,9 @@ export function setupLead(root: HTMLElement) {
       put('[data-quote-installment]', format(payment));
       put('[data-installment-label]', `Cuota estimada a ${months} meses · TEA ${annualEffectiveRate} %`);
     }
-    const action = purpose === 'visita' ? 'coordinar una visita a' : purpose === 'cotizacion' ? 'solicitar una cotización de' : 'pedir información sobre';
-    const message = lot?.demo ? `Hola, estoy probando el cotizador de La Nueva Estancia para el lote ficticio ${lot.id}.` :
-      `Hola, quisiera ${action} La Nueva Estancia${context ? ` (${context})` : ''}.`;
+    const message = lot?.demo ? demoLotMessage(lot.id) : salesMessage(purpose, context);
     root.querySelectorAll<HTMLAnchorElement>('[data-channel]').forEach(link => {
-      link.href = `https://wa.me/${link.dataset.channel}?text=${encodeURIComponent(message)}`;
+      link.href = wap(message, link.dataset.channel);
     });
     if (form) form.hidden = !!lot?.demo;
   }

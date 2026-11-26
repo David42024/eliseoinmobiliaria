@@ -1,5 +1,7 @@
 ---
-import { ArrowUpRight, Clock, MapPin, Menu, MessageCircle } from '../components/icons';
+import { Clock, Mail, MapPin, Menu } from '../components/icons';
+import SalesChat from '../components/SalesChat.astro';
+import SocialIcon from '../components/SocialIcon.astro';
 import { navigation, project, contact, wap } from '../data/project';
 import { legalLink } from '../data/legal';
 import '../styles/site.css';
@@ -69,6 +71,12 @@ const claims = legalLink('reclamaciones');
             <span><strong>ELÍSEO</strong><small>INMOBILIARIA</small></span>
           </a>
           <p>Habilitación urbana y vivienda en Trujillo, Perú.</p>
+          <nav class="footer-social" aria-label="Redes sociales de Elíseo">
+            {contact.social.map(({ name, icon, href }) => (
+              <a href={href} target="_blank" rel="noopener noreferrer" aria-label={name}><SocialIcon name={icon} /></a>
+            ))}
+            <a href={wap()} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" data-whatsapp><SocialIcon name="whatsapp" /></a>
+          </nav>
         </div>
         <div>
           <h2>El proyecto</h2>
@@ -81,7 +89,7 @@ const claims = legalLink('reclamaciones');
           <h2>Oficina de ventas</h2>
           <p><MapPin size={17} /> Frente a la Av. Huamán, {project.district}</p>
           <p><Clock size={17} /> {contact.hours}</p>
-          <a href={`mailto:${contact.email}`}>{contact.email}</a>
+          <a href={`mailto:${contact.email}`}><Mail size={17} /> {contact.email}</a>
         </div>
       </div>
       <div class="wrap footer-bottom">
@@ -90,11 +98,13 @@ const claims = legalLink('reclamaciones');
           {privacy && <a href={privacy}>Privacidad</a>}
           {claims && <a href={claims}>Libro de Reclamaciones</a>}
           {ga4 && <button type="button" data-analytics-settings>Preferencias de medición</button>}
-          <a href={wap()} target="_blank" rel="noopener noreferrer" data-whatsapp>WhatsApp <ArrowUpRight size={15} /></a>
         </div>
       </div>
     </footer>
-    <a class="floating-wa" href={wap()} target="_blank" rel="noopener noreferrer" aria-label="Consultar por WhatsApp" data-whatsapp><MessageCircle size={25} /></a>
+    <div class="floating-contact">
+      <SalesChat />
+      <a class="floating-wa" href={wap()} target="_blank" rel="noopener noreferrer" aria-label="Consultar por WhatsApp" data-whatsapp><SocialIcon name="whatsapp" size={25} /></a>
+    </div>
     {ga4 && <aside id="analytics-consent" aria-label="Preferencias de medición" class="analytics-consent" hidden>
       <p>¿Permites la medición de visitas y acciones de navegación?</p>
       <button class="button" type="button" data-consent="allow">Permitir</button>

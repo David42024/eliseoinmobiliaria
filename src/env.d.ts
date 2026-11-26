@@ -5,6 +5,7 @@ declare namespace App {
         CRM_WEBHOOK_URL?: string;
         CRM_WEBHOOK_TOKEN?: string;
         CRM_COPY_TO?: string;
+        GROQ_API_KEY?: string;
       };
     };
   }

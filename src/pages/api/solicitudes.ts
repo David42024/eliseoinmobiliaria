@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { official } from '../../data/inventory';
 import { legalLink } from '../../data/legal';
 import { project } from '../../data/project';
+import { readJsonBody } from '../../server/read-json';
 
 export const prerender = false;
 const MAX_BODY = 4096;
@@ -12,22 +13,6 @@ const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{1
 const respond = (status: number, confirmed = false) => Response.json({ confirmed }, {
   status, headers: { 'Cache-Control': 'no-store' },
 });
-
-async function readBody(request: Request) {
-  const reader = request.body?.getReader();
-  if (!reader) return null;
-  const decoder = new TextDecoder();
-  let text = '';
-  let size = 0;
-  while (true) {
-    const chunk = await reader.read();
-    if (chunk.done) break;
-    size += chunk.value.byteLength;
-    if (size > MAX_BODY) { await reader.cancel(); return null; }
-    text += decoder.decode(chunk.value, { stream: true });
-  }
-  return JSON.parse(text + decoder.decode());
-}
 
 export const POST: APIRoute = async ({ request, clientAddress, locals, site, url }) => {
   const { CRM_WEBHOOK_URL: webhook, CRM_WEBHOOK_TOKEN: token, CRM_COPY_TO: copyTo } = locals.runtime?.env ?? process.env;
@@ -43,7 +28,7 @@ export const POST: APIRoute = async ({ request, clientAddress, locals, site, url
   attempts.set(clientAddress, rate);
 
   let payload: Record<string, unknown>;
-  try { payload = await readBody(request); } catch { return respond(400); }
+  try { payload = await readJsonBody(request, MAX_BODY); } catch { return respond(400); }
   if (!payload || typeof payload !== 'object' || Array.isArray(payload) || payload.website !== '' ||
     payload.project !== project.id || payload.consent !== true) return respond(400);
   const clean = (value: unknown) => typeof value === 'string' ? value.trim() : '';

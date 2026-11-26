@@ -1,6 +1,6 @@
 ---
-import { MessageCircle } from './icons';
-import { contact, project, wap } from '../data/project';
+import SocialIcon from './SocialIcon.astro';
+import { contact, project, salesMessage, wap } from '../data/project';
 import { legalLink } from '../data/legal';
 import { inventory, official } from '../data/inventory';
 import { publicPrice, financing, installmentTerms } from '../data/commercial';
@@ -28,7 +28,7 @@ const displayNumber = (number: string) => `+51 ${number.slice(2, 5)} ${number.sl
       <div><dt>Precio</dt><dd>
         <span data-quote-price hidden></span>
         <a class="button soft compact" data-quote-inquiry data-channel={order[0]} data-whatsapp
-          href={wap('Hola, quisiera consultar el precio en La Nueva Estancia.')} target="_blank" rel="noopener noreferrer">Consultar precio</a>
+          href={wap(salesMessage('cotizacion'))} target="_blank" rel="noopener noreferrer">Consultar precio</a>
       </dd></div>
       <div data-initial-row hidden><dt>Cuota inicial</dt><dd data-quote-initial></dd></div>
       <div data-initial-row hidden><dt>Saldo</dt><dd data-quote-balance></dd></div>
@@ -63,7 +63,7 @@ const displayNumber = (number: string) => `+51 ${number.slice(2, 5)} ${number.sl
   <div class="contact-channels">
     {order.map((number, index) => (
       <a data-channel={number} data-whatsapp href={wap(undefined, number)} target="_blank" rel="noopener noreferrer">
-        <MessageCircle size={22} /> <span><strong>{displayNumber(number)}</strong><small>{index === 0 ? 'WhatsApp de ventas' : 'WhatsApp alternativo'}</small></span>
+        <SocialIcon name="whatsapp" size={22} /> <span><strong>{displayNumber(number)}</strong><small>{index === 0 ? 'WhatsApp de ventas' : 'WhatsApp alternativo'}</small></span>
       </a>
     ))}
   </div>

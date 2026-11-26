@@ -62,6 +62,7 @@ Si cambian los datos públicos, las fechas de vigencia o las variables de compil
 | Precios, vigencias y condiciones financieras | `content/prices.json` |
 | Portada, galería, fichas, tour, maqueta y avances | `content/media.json` |
 | Privacidad y Libro de Reclamaciones | `content/legal.json` |
+| Información comercial del asistente | `content/asistente.md` |
 
 Los PNG originales extraídos del formulario están en `brand-source/`. El sitio usa versiones optimizadas en `public/marca/`. La composición de portada utiliza el símbolo de Elíseo y trazos decorativos. Cuando exista un render oficial, configura `cover` para reemplazar la composición gráfica.
 
@@ -94,11 +95,15 @@ Usa `templates/medios.json` y `templates/avance.json`. Usa variantes AVIF o WebP
 
 En `content/media.json`, usa `cover` para la foto de portada, `gallery` para la galería general, `typologies.<id>.renders` y `typologies.<id>.floorPlan` para cada ficha y `spaces.<slug>` para las fotos de un espacio. Cada galería admite varias imágenes y destaca la primera. Al tocar una imagen se abre su versión ampliada.
 
+Para cambiar la imagen referencial de una tarjeta, define `typologies.<id>.cardImage` con el mismo formato que `cover`. Si la ficha tiene renders, la tarjeta puede usar el primero como imagen principal.
+
 - **URL o ZIP web.** En `tour` usa `kind: "iframe"` y `src` con la URL publicada o la ruta al `index.html`. Para un ZIP oficial, extrae su árbol completo en `public/recorrido/` conservando nombres, subcarpetas y rutas relativas. El visor mantiene la navegación del proveedor. Usa `embed: false` si este bloquea el iframe. La opción de abrir en otra pestaña permanece disponible.
 - **Panoramas equirectangulares.** Usa `kind: "panorama"` y una lista `scenes` con `id`, `title`, `group`, `src` y, opcionalmente, `hotspots` con `label`, `target` (ID), `yaw` y `pitch` en grados. Agrupa por vistas aéreas, peatonales, espacios del proyecto o interiores según el material. Usa `poster` como imagen ligera independiente del panorama.
 - **Video o maqueta.** Usa `kind: "video"` para video convencional, `"video360"` para video esférico equirectangular y `"model"` para GLB/glTF. Para la maqueta adicional, configura el objeto `model`. Conserva las texturas junto al glTF si existen referencias externas. Pide exportación web o URL publicada si arquitectura entrega solo el archivo editable.
 
 ### Solicitudes, privacidad y medición
+
+El asistente envía cada consulta y hasta dos turnos recientes a Groq. Edita `content/asistente.md` con información pública que el equipo comercial pueda confirmar. Configura `GROQ_API_KEY` como secreto de ejecución en **Cloudflare Pages → Settings → Variables and Secrets → Production** y vuelve a desplegar. En Node local usa `.env`. Si el servicio no responde, el chat deriva a WhatsApp. [Secretos de Pages](https://developers.cloudflare.com/pages/functions/bindings/#secrets)
 
 Configura en `content/legal.json` la URL oficial o la lista de párrafos aprobados de cada página. Para un Libro de Reclamaciones alojado en otro servicio usa `url` hacia el canal oficial. El formulario requiere un enlace de privacidad y `PUBLIC_LEAD_FORM=true` al compilar. Mientras se configura, los CTA funcionan vía WhatsApp con el contexto de la solicitud.
 

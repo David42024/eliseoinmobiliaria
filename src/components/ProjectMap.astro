@@ -1,0 +1,30 @@
+---
+import { project } from '../data/project';
+
+interface Props { controls?: boolean }
+const { controls = false } = Astro.props;
+---
+<div class:list={['map-card', { 'map-card-home': !controls }]}>
+  {controls && <div class="map-controls" role="group" aria-label="Vista de Google Maps" data-map-controls hidden>
+    <button class="button compact outline" type="button" aria-pressed="true" aria-controls="mapa-estancia" data-map-src={project.mapEmbed}>Mapa</button>
+    <button class="button compact outline" type="button" aria-pressed="false" aria-controls="mapa-estancia" data-map-src={project.mapSatelliteEmbed}>Satélite</button>
+  </div>}
+  <iframe id={controls ? 'mapa-estancia' : undefined} title="Mapa de La Nueva Estancia en Google Maps" src={project.mapEmbed}
+    width="720" height="450" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
+<script>
+  const frame = document.querySelector<HTMLIFrameElement>('#mapa-estancia');
+  const controls = document.querySelector<HTMLElement>('[data-map-controls]');
+  if (frame && controls) {
+    const views = controls.querySelectorAll<HTMLButtonElement>('[data-map-src]');
+    for (const view of views) {
+      view.addEventListener('click', () => {
+        if (!view.dataset.mapSrc || view.getAttribute('aria-pressed') === 'true') return;
+        frame.src = view.dataset.mapSrc;
+        frame.title = `${view.textContent?.trim()} · La Nueva Estancia en Google Maps`;
+        for (const button of views) button.setAttribute('aria-pressed', String(button === view));
+      });
+    }
+    controls.hidden = false;
+  }
+</script>

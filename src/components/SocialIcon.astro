@@ -1,0 +1,9 @@
+---
+import { socialIcons } from '../data/social-icons';
+
+interface Props { name: keyof typeof socialIcons; size?: number }
+const { name, size = 20 } = Astro.props;
+---
+<svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor" aria-hidden="true" focusable="false">
+  <path d={socialIcons[name]} />
+</svg>

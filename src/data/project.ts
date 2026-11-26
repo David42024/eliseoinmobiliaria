@@ -82,6 +82,11 @@ export const contact = {
   primary: 0,
   email: 'eliseoinmobiliaria4@gmail.com',
   hours: 'Lunes a sábado, de 7:00 a. m. a 7:00 p. m.',
+  social: [
+    { name: 'Instagram', icon: 'instagram', href: 'https://www.instagram.com/eliseoinmobiliaria_peru/' },
+    { name: 'Facebook', icon: 'facebook', href: 'https://www.facebook.com/share/193vVPuudz/' },
+    { name: 'TikTok', icon: 'tiktok', href: 'https://www.tiktok.com/@elseo.inmobiliari' },
+  ] as const,
 };
 
 export const navigation = [
@@ -90,7 +95,19 @@ export const navigation = [
   ['Nosotros', '/nosotros/'], ['Contacto', '/contacto/'],
 ] as const;
 
-export const wap = (message = 'Hola, quisiera información sobre La Nueva Estancia.', number = contact.numbers[contact.primary]) =>
+export function salesMessage(purpose = 'informacion', context = '') {
+  const request = purpose === 'visita'
+    ? '¿Qué días y horarios tienen disponibles para una visita guiada?'
+    : purpose === 'cotizacion'
+      ? '¿Podrían enviarme el precio vigente, la disponibilidad y las opciones de pago?'
+      : '¿Podrían orientarme sobre las opciones disponibles y cómo agendar una visita?';
+  return `¡Hola, equipo de Elíseo Inmobiliaria! Estoy interesado en La Nueva Estancia.${context ? `\n\nMi consulta es sobre ${context}.` : ''}\n\n${request}\n\n¡Gracias!`;
+}
+
+export const demoLotMessage = (id: string) =>
+  `¡Hola, equipo de Elíseo! Vi el lote de demostración ${id} en el sitio de La Nueva Estancia. ¿Podrían mostrarme opciones similares que estén disponibles? ¡Gracias!`;
+
+export const wap = (message = salesMessage(), number = contact.numbers[contact.primary]) =>
   `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 
 export const inquiry = (page: 'contacto' | 'financiamiento', options: { tipo?: string; lote?: string; finalidad?: string } = {}) => {

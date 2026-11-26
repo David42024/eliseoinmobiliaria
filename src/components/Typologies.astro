@@ -2,29 +2,43 @@
 import { Building, House, PanelsTopLeft } from './icons';
 import { project, inquiry, typologyPath } from '../data/project';
 import { publicPrice, priceLabel } from '../data/commercial';
-import { media } from '../data/media';
+import { media, type Picture } from '../data/media';
 const { expanded = false } = Astro.props;
 const icons = { lot: PanelsTopLeft, apartment: Building, house: House };
+const references = {
+  lot: { src: '/tipologias/lotes.webp', alt: 'Terrenos residenciales junto a una vía pavimentada' },
+  apartment: { src: '/tipologias/departamentos.webp', alt: 'Edificios de departamentos junto a un jardín' },
+  house: { src: '/tipologias/casas.webp', alt: 'Casas de dos pisos dentro de un conjunto residencial' },
+};
 ---
 <div class="type-grid">
   {project.typologies.map(type => {
     const Icon = icons[type.icon];
     const detail = media.typologies[type.id];
+    const supplied = detail?.cardImage ?? detail?.renders?.[0];
+    const image: Picture = supplied ?? { ...references[type.icon], width: 960, height: 600 };
     const price = publicPrice('typology', type.id);
     return (
       <article class="type-card" id={expanded ? type.id : undefined}>
-        <span class="type-icon"><Icon size={27} stroke-width={1.45} /></span>
-        <h3>{type.label}</h3>
-        <p>{type.description}</p>
-        {(detail?.area || 'area' in type) && <p class="type-area">{detail?.area || ('area' in type ? type.area : '')}</p>}
-        {expanded && <p class="property-detail">{detail?.availability || 'Disponibilidad por consultar'}</p>}
-        <div class="type-end">
-          {price && <strong>{priceLabel(price)}</strong>}
-          <div class="type-links">
-            <a class="button outline compact" href={typologyPath(type)}>Ver {type.label.toLocaleLowerCase('es-PE')}</a>
-            <a class="button soft compact" href={inquiry('financiamiento', { tipo: type.id })}>
-              {price ? 'Cotizar' : 'Consultar precio'}<span class="sr-only"> · {type.singular}</span>
-            </a>
+        <div class="type-media">
+          <img src={image.src} srcset={image.srcset} sizes="(max-width: 760px) 95vw, 33vw"
+            alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" />
+          {!supplied && <span class="type-caption">Imagen referencial</span>}
+        </div>
+        <div class="type-copy">
+          <span class="type-icon"><Icon size={23} stroke-width={1.55} /></span>
+          <h3>{type.label}</h3>
+          <p>{type.description}</p>
+          {(detail?.area || 'area' in type) && <p class="type-area">{detail?.area || ('area' in type ? type.area : '')}</p>}
+          {expanded && <p class="property-detail">{detail?.availability || 'Disponibilidad por consultar'}</p>}
+          <div class="type-end">
+            {price && <strong>{priceLabel(price)}</strong>}
+            <div class="type-links">
+              <a class="button outline compact" href={typologyPath(type)}>Ver {type.label.toLocaleLowerCase('es-PE')}</a>
+              <a class="button soft compact" href={inquiry('financiamiento', { tipo: type.id })}>
+                {price ? 'Cotizar' : 'Consultar precio'}<span class="sr-only"> · {type.singular}</span>
+              </a>
+            </div>
           </div>
         </div>
       </article>

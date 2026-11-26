@@ -2,6 +2,7 @@
 import { Clock, MapPin } from '../components/icons';
 import Site from '../layouts/Site.astro';
 import PageIntro from '../components/PageIntro.astro';
+import ProjectMap from '../components/ProjectMap.astro';
 import { project, contact } from '../data/project';
 ---
 <Site title="Ubicación en Av. Huamán | La Nueva Estancia · Elíseo" description="Ubica La Nueva Estancia y la oficina de ventas frente a la Av. Huamán, Víctor Larco, cerca del óvalo La Marina.">
@@ -17,33 +18,10 @@ import { project, contact } from '../data/project';
         <a class="text-link" href="/contacto/?finalidad=visita">Solicitar visita</a>
       </div>
     </div>
-    <div class="map-card">
-      <div class="map-controls" role="group" aria-label="Vista de Google Maps" data-map-controls hidden>
-        <button class="button compact outline" type="button" aria-pressed="true" aria-controls="mapa-estancia" data-map-src={project.mapEmbed}>Mapa</button>
-        <button class="button compact outline" type="button" aria-pressed="false" aria-controls="mapa-estancia" data-map-src={project.mapSatelliteEmbed}>Satélite</button>
-      </div>
-      <iframe id="mapa-estancia" title="Mapa de La Nueva Estancia en Google Maps" src={project.mapEmbed}
-        width="720" height="450" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    </div>
+    <ProjectMap controls />
   </section>
   <section class="section location-home"><div class="wrap">
     <p class="eyebrow">El entorno</p><h2>Lugares cercanos</h2>
     <ul class="nearby-list">{project.nearby.map(place => <li><MapPin size={19} />{place}</li>)}</ul>
   </div></section>
-  <script>
-    const frame = document.querySelector<HTMLIFrameElement>('#mapa-estancia');
-    const controls = document.querySelector<HTMLElement>('[data-map-controls]');
-    if (frame && controls) {
-      const views = controls.querySelectorAll<HTMLButtonElement>('[data-map-src]');
-      for (const view of views) {
-        view.addEventListener('click', () => {
-          if (!view.dataset.mapSrc || view.getAttribute('aria-pressed') === 'true') return;
-          frame.src = view.dataset.mapSrc;
-          frame.title = `${view.textContent?.trim()} · La Nueva Estancia en Google Maps`;
-          for (const button of views) button.setAttribute('aria-pressed', String(button === view));
-        });
-      }
-      controls.hidden = false;
-    }
-  </script>
 </Site>

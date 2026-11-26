@@ -1,0 +1,129 @@
+---
+import { MessageCircle } from './icons';
+import SocialIcon from './SocialIcon.astro';
+import { wap } from '../data/project';
+---
+<button class="chat-open button" type="button" aria-controls="sales-chat" aria-haspopup="dialog" data-chat-open hidden>
+  <MessageCircle size={20} aria-hidden="true" /> Asistente
+</button>
+<dialog class="sales-chat" id="sales-chat" aria-labelledby="sales-chat-title">
+  <header>
+    <div><strong id="sales-chat-title">Asistente de Elíseo</strong><small>La Nueva Estancia</small></div>
+    <button class="chat-close" type="button" aria-label="Cerrar el asistente" data-chat-close>×</button>
+  </header>
+  <div class="chat-messages" role="log" aria-label="Conversación" aria-live="polite" tabindex="0">
+    <p>¡Hola! Puedo orientarte sobre La Nueva Estancia. ¿Qué te gustaría saber?</p>
+  </div>
+  <div class="chat-questions" data-chat-questions>
+    <button type="button">¿Dónde está el proyecto?</button>
+    <button type="button">¿Cómo agendo una visita?</button>
+  </div>
+  <form class="chat-form">
+    <label class="sr-only" for="sales-chat-question">Tu pregunta</label>
+    <input id="sales-chat-question" name="question" placeholder="Escribe tu pregunta" maxlength="500" autocomplete="off" required />
+    <button class="button compact" type="submit">Enviar</button>
+  </form>
+  <div class="chat-help">
+    <p>Evita compartir datos personales.</p>
+    <a href={wap()} target="_blank" rel="noopener noreferrer" data-whatsapp>
+      <SocialIcon name="whatsapp" size={16} /> Hablar con ventas
+    </a>
+  </div>
+</dialog>
+
+<script>
+  const launch = document.querySelector<HTMLButtonElement>('[data-chat-open]')!;
+  const dialog = document.querySelector<HTMLDialogElement>('#sales-chat')!;
+  const log = dialog.querySelector<HTMLElement>('[role="log"]')!;
+  const form = dialog.querySelector<HTMLFormElement>('form')!;
+  const input = dialog.querySelector<HTMLInputElement>('input')!;
+  const submit = form.querySelector<HTMLButtonElement>('[type="submit"]')!;
+  const suggestions = dialog.querySelector<HTMLElement>('[data-chat-questions]')!;
+  const history: { role: 'user' | 'assistant'; content: string }[] = [];
+
+  function addMessage(content: string, role: 'user' | 'assistant' = 'assistant') {
+    const item = document.createElement('p');
+    item.dataset.role = role;
+    item.textContent = content;
+    log.append(item);
+    log.scrollTop = log.scrollHeight;
+    return item;
+  }
+
+  async function ask(question: string) {
+    const content = question.trim();
+    if (!content || submit.disabled) return;
+    input.value = '';
+    submit.disabled = true;
+    suggestions.hidden = true;
+    const message = { role: 'user' as const, content };
+    addMessage(content, 'user');
+    const pending = addMessage('Consultando…');
+    try {
+      const response = await fetch('/api/asistente', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: [...history, message] }),
+        signal: AbortSignal.timeout(15_000),
+      });
+      const result = await response.json();
+      if (response.ok && typeof result.answer === 'string') {
+        history.push(message, { role: 'assistant', content: result.answer });
+        if (history.length > 4) history.splice(0, history.length - 4);
+        addMessage(result.answer);
+      } else {
+        addMessage(result.error || 'No pudimos responder ahora. Puedes escribir al equipo de ventas.');
+      }
+    } catch {
+      addMessage('No pudimos responder ahora. Puedes escribir al equipo de ventas.');
+    } finally {
+      pending.remove();
+      submit.disabled = false;
+    }
+  }
+
+  launch.hidden = false;
+  launch.addEventListener('click', () => dialog.showModal());
+  dialog.querySelector('[data-chat-close]')?.addEventListener('click', () => dialog.close());
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    void ask(input.value);
+  });
+  suggestions.querySelectorAll('button').forEach(button => {
+    button.addEventListener('click', () => {
+      input.focus();
+      void ask(button.textContent || '');
+    });
+  });
+</script>
+
+<style>
+  .chat-open { min-height: 50px; border-radius: 999px; padding-inline: .95rem; box-shadow: 0 5px 19px #15312640; }
+  .sales-chat {
+    inset: auto max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) auto;
+    margin: 0;
+    width: min(390px, calc(100% - 2rem));
+    max-width: none;
+    max-height: calc(100dvh - 2rem);
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--white);
+    color: var(--forest);
+    box-shadow: 0 16px 56px #15312655;
+  }
+  .sales-chat[open] { display: flex; flex-direction: column; }
+  .sales-chat::backdrop { background: #10261b55; }
+  header { display: flex; justify-content: space-between; gap: .5rem; align-items: center; padding: .75rem .95rem; background: var(--forest); color: var(--white); line-height: 1.35; }
+  header small { display: block; color: #c3d7be; }
+  .chat-close { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid #64816f; border-radius: 50%; background: #284a3a; color: inherit; font: 600 1.5rem/1 var(--sans); }
+  .chat-messages { padding: .85rem; height: min(290px, 42dvh); overflow: auto; overscroll-behavior: contain; }
+  .chat-messages :global(p) { width: fit-content; max-width: 94%; padding: .45rem .65rem; border-radius: 9px; background: var(--soft); color: var(--forest); font-size: .93rem; overflow-wrap: anywhere; white-space: pre-wrap; }
+  .chat-messages :global(p[data-role="user"]) { margin-left: auto; background: #315841; color: var(--white); }
+  .chat-questions { display: flex; flex-wrap: wrap; gap: .35rem; padding: 0 .85rem .7rem; }
+  .chat-questions button { min-height: 40px; padding: .24rem .65rem; border: 1px solid #abbba8; border-radius: 99px; background: var(--soft); color: var(--forest); font-size: .82rem; }
+  .chat-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .45rem; padding: .65rem .85rem; border-top: 1px solid var(--line); }
+  .chat-form input { min-width: 0; border: 1px solid #abbba8; border-radius: 8px; padding: .4rem .6rem; color: var(--forest); background: #fff; }
+  .chat-help { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .35rem .65rem; padding: 0 .85rem .7rem; font-size: .77rem; }
+  .chat-help a { display: inline-flex; align-items: center; gap: .35rem; min-height: 32px; font-weight: 680; text-decoration: none; }
+</style>

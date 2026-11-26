@@ -1,7 +1,7 @@
 ---
 import { Minus, Plus, RotateCcw } from './icons';
 import { statusLabel, type Inventory } from '../data/inventory';
-import { project, areaFormat, inquiry, wap } from '../data/project';
+import { project, areaFormat, demoLotMessage, inquiry, salesMessage, wap } from '../data/project';
 import { publicPrice, priceLabel } from '../data/commercial';
 const { plan, isDemo } = Astro.props as { plan: Inventory; isDemo: boolean };
 const [x, y, w, h] = plan.viewBox;
@@ -48,7 +48,7 @@ const [x, y, w, h] = plan.viewBox;
           {price && <p><strong>{priceLabel(price)}</strong></p>}
           <div class="button-row">
             <a class="button" href={inquiry('financiamiento', { lote: lot.id, tipo: lot.type })}>{price ? 'Cotizar este lote' : priceLabel()}</a>
-            <a class="text-link" data-whatsapp href={wap(isDemo ? `Hola, estoy probando el visor de La Nueva Estancia. Seleccioné el lote ficticio ${lot.id}.` : `Hola, quisiera información sobre el lote ${lot.id} de La Nueva Estancia.`)} target="_blank" rel="noopener noreferrer">Consultar por WhatsApp</a>
+            <a class="text-link" data-whatsapp href={wap(isDemo ? demoLotMessage(lot.id) : salesMessage('informacion', `el lote ${lot.id}`))} target="_blank" rel="noopener noreferrer">Consultar por WhatsApp</a>
           </div>
         </div>;
       })}

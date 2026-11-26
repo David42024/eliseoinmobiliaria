@@ -21,6 +21,7 @@
       "bedrooms": null,
       "bathrooms": null,
       "availability": "",
+      "cardImage": null,
       "floorPlan": null,
       "renders": []
     }

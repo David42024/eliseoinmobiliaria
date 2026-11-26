@@ -2,6 +2,7 @@
 import { Building, CalendarDays, MapPin } from '../components/icons';
 import Site from '../layouts/Site.astro';
 import Gallery from '../components/Gallery.astro';
+import ProjectMap from '../components/ProjectMap.astro';
 import Typologies from '../components/Typologies.astro';
 import VisitBanner from '../components/VisitBanner.astro';
 import { project, spacePath } from '../data/project';
@@ -53,13 +54,13 @@ const price = publicPrice('project', project.id);
   {media.gallery.length > 0 && <section class="section wrap home-gallery"><h2>Imágenes de La Nueva Estancia</h2><Gallery pictures={media.gallery} featured /></section>}
   <section class="section location-home">
     <div class="wrap split">
-      <div class="location-art" aria-hidden="true"><div></div><MapPin size={58} stroke-width={1.15} /></div>
+      <ProjectMap />
       <div>
         <p class="eyebrow">Ubicación</p>
         <h2>Frente a la Av. Huamán</h2>
         <p>En Víctor Larco, cerca del óvalo La Marina y con conexión a las principales vías de Trujillo.</p>
         <p>La propuesta urbana contempla servicios, parques y áreas verdes, además de espacios de recreación y educación.</p>
-        <div class="button-row"><a class="button outline" href="/ubicacion/">Ver ubicación</a><a class="text-link" href={spacePath(project.spaces[0])}>Ver parques y áreas verdes</a></div>
+        <div class="button-row"><a class="button" href="/ubicacion/">Ver ubicación</a><a class="button outline" href={spacePath(project.spaces[0])}>Ver parques y áreas verdes</a></div>
       </div>
     </div>
   </section>
