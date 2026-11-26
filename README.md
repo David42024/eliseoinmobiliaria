@@ -1,6 +1,6 @@
 # Elíseo Inmobiliaria · La Nueva Estancia
 
-Primera versión del sitio comercial de La Nueva Estancia. Astro genera las páginas como HTML estático y ejecuta el endpoint de solicitudes en Node. El visor de lotes de desarrollo contiene datos ficticios identificados en pantalla. La compilación usa la consulta comercial mientras el inventario oficial esté desactivado.
+Primera versión del sitio comercial de La Nueva Estancia. Astro genera las páginas como HTML estático. El endpoint de solicitudes funciona en Cloudflare Workers y en el servidor Node local. El visor de lotes de desarrollo contiene datos ficticios identificados en pantalla. La compilación usa la consulta comercial mientras el inventario oficial esté desactivado.
 
 ## Instalación y despliegue
 
@@ -10,13 +10,32 @@ Usa Node.js 22.19 o posterior y npm. Ejecuta desde la raíz del proyecto.
 npm ci
 npm run dev
 npm run check
-npm run build
+npm run build:node
 npm start
 ```
 
 En desarrollo, abre `http://localhost:4321`. Detén el servidor de desarrollo antes de arrancar la compilación en el mismo puerto. Copia `.env.example` a `.env` para habilitar integraciones. Define `SITE_URL` con el origen público HTTPS antes de compilar. Así se generan URLs canónicas, metadatos sociales y las entradas del sitemap. Con el dominio sin configurar, el sitio incluye directivas para evitar la indexación.
 
-En el hosting ejecuta `npm ci`, `npm run build` y `npm start`. Usa `HOST=0.0.0.0` en el servidor de despliegue y el puerto requerido por la plataforma. Termina HTTPS en el proxy y usa un solo origen público. Sirve `dist/client` junto a `dist/server`; la entrada Node sirve las páginas estáticas y `POST /api/solicitudes`. Guarda las variables privadas en el gestor de secretos. Si cambian los datos públicos, las fechas de vigencia o las variables de compilación, vuelve a compilar y desplegar. Programa una recompilación al comienzo o fin de una vigencia cuando corresponda.
+### Cloudflare Workers
+
+Importa el repositorio en Workers & Pages. La rama de producción es `main` y el directorio de trabajo es la raíz del repositorio.
+
+| Campo en Workers Builds | Valor |
+| --- | --- |
+| Project name | `eliseoinmobiliaria` |
+| Build command | `npm run build` |
+| Deploy command | `npx wrangler deploy` |
+| Preview command | `npx wrangler preview` |
+
+`npm run build` genera el Worker y sus recursos en `dist-worker`. Para probar esa compilación en local ejecuta `npm run preview:worker`. La configuración de Wrangler vincula los recursos estáticos y pasa las rutas dinámicas a Astro.
+
+En **Settings → Build → Build variables and secrets** configura `SITE_URL` con la URL pública definitiva y, si corresponde, `PUBLIC_GA4_ID` y `PUBLIC_LEAD_FORM=true`. Con la configuración inicial puedes publicar el sitio y atender consultas por WhatsApp. Activa el formulario al contar con la política de privacidad aprobada y los datos del CRM. Configura `CRM_WEBHOOK_TOKEN` como secreto del Worker y `CRM_WEBHOOK_URL` y `CRM_COPY_TO` en **Settings → Variables and Secrets**. Para pruebas locales de Workers puedes usar un archivo `.dev.vars` excluido de Git. [Variables de compilación y de ejecución](https://developers.cloudflare.com/workers/ci-cd/builds/configuration/#environment-variables)
+
+### Servidor Node
+
+Ejecuta `npm ci`, `npm run build:node` y `npm start`. Para un servidor remoto usa `HOST=0.0.0.0`, el puerto requerido por la plataforma y HTTPS en el proxy. La entrada Node sirve las páginas estáticas desde `dist/client` y la API desde `dist/server`.
+
+Si cambian los datos públicos, las fechas de vigencia o las variables de compilación, recompila y despliega. Programa una recompilación al comienzo o fin de una vigencia cuando corresponda.
 
 ## Configuración del contenido
 

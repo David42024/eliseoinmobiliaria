@@ -4,13 +4,16 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build --config astro.cloudflare.config.mjs",
+    "build:node": "astro build",
     "start": "node --env-file-if-exists=.env dist/server/entry.mjs",
+    "preview:worker": "wrangler dev",
     "check": "astro check",
     "import:inventario": "node scripts/import-inventory.mjs"
   },
   "engines": { "node": ">=22.12.0" },
   "dependencies": {
+    "@astrojs/cloudflare": "12.6.13",
     "@astrojs/node": "^9.0.0",
     "@lucide/astro": "^1.81.0",
     "astro": "^5.18.0",
@@ -21,6 +24,7 @@
     "@astrojs/check": "^0.9.0",
     "@types/node": "^22.0.0",
     "@types/three": "^0.181.0",
-    "typescript": "^5.9.0"
+    "typescript": "^5.9.0",
+    "wrangler": "4.168.0"
   }
 }

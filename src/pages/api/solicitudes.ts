@@ -29,10 +29,9 @@ async function readBody(request: Request) {
   return JSON.parse(text + decoder.decode());
 }
 
-export const POST: APIRoute = async ({ request, clientAddress, site, url }) => {
-  const webhook = process.env.CRM_WEBHOOK_URL || '';
-  const token = process.env.CRM_WEBHOOK_TOKEN;
-  if (import.meta.env.PUBLIC_LEAD_FORM !== 'true' || !legalLink('privacidad') || !token || !webhook.startsWith('https://')) return respond(503);
+export const POST: APIRoute = async ({ request, clientAddress, locals, site, url }) => {
+  const { CRM_WEBHOOK_URL: webhook, CRM_WEBHOOK_TOKEN: token, CRM_COPY_TO: copyTo } = locals.runtime?.env ?? process.env;
+  if (import.meta.env.PUBLIC_LEAD_FORM !== 'true' || !legalLink('privacidad') || !token || !webhook?.startsWith('https://')) return respond(503);
   if (request.headers.get('origin') !== (site?.origin || url.origin) ||
     request.headers.get('content-type')?.split(';')[0] !== 'application/json') return respond(403);
   const key = request.headers.get('idempotency-key') || '';
@@ -71,7 +70,7 @@ export const POST: APIRoute = async ({ request, clientAddress, site, url }) => {
       body: JSON.stringify({
         name, phone: `+51${phone.slice(-9)}`, email, purpose, project: project.id, type, lot: lotId,
         consent: true, consentAt: new Date(now).toISOString(), attribution, requestId: key,
-        copyTo: process.env.CRM_COPY_TO || undefined,
+        copyTo: copyTo || undefined,
       }),
       signal: AbortSignal.timeout(7000),
       redirect: 'error',

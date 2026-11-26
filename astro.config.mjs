@@ -4,8 +4,12 @@ import { loadEnv } from 'vite';
 
 const { SITE_URL } = { ...loadEnv(process.env.NODE_ENV ?? 'development', process.cwd(), ''), ...process.env };
 
-export default defineConfig({
+export const siteConfig = {
   site: SITE_URL || undefined,
-  adapter: node({ mode: 'standalone' }),
   devToolbar: { enabled: false },
+};
+
+export default defineConfig({
+  ...siteConfig,
+  adapter: node({ mode: 'standalone' }),
 });
