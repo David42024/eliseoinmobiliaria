@@ -7,6 +7,7 @@ export { default as ExternalLink } from '@lucide/astro/icons/external-link';
 export { default as GraduationCap } from '@lucide/astro/icons/graduation-cap';
 export { default as HardHat } from '@lucide/astro/icons/hard-hat';
 export { default as House } from '@lucide/astro/icons/house';
+export { default as Image } from '@lucide/astro/icons/image';
 export { default as Mail } from '@lucide/astro/icons/mail';
 export { default as MapPin } from '@lucide/astro/icons/map-pin';
 export { default as Menu } from '@lucide/astro/icons/menu';

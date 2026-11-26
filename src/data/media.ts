@@ -32,5 +32,6 @@ export const media = settings as {
   tour: Tour | null;
   model: Tour | null;
   typologies: Record<string, PropertyMedia>;
+  spaces?: Record<string, Picture[]>;
   progress: Progress[];
 };

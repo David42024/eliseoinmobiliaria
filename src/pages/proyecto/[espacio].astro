@@ -1,9 +1,11 @@
 ---
 import type { InferGetStaticPropsType } from 'astro';
 import { GraduationCap, Route, Trees } from '../../components/icons';
+import Gallery from '../../components/Gallery.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import Site from '../../layouts/Site.astro';
 import { project, spacePath } from '../../data/project';
+import { media } from '../../data/media';
 
 export function getStaticPaths() {
   return project.spaces.map(space => ({ params: { espacio: space.slug }, props: { space } }));
@@ -23,6 +25,10 @@ const Icon = { trees: Trees, education: GraduationCap, route: Route }[space.icon
       <h2 id="estado-proyecto">Preventa sobre planos</h2>
       <a href={space.action.href} class="button light">{space.action.label}</a>
     </aside>
+    <section class="detail-gallery">
+      <h2>Galería</h2>
+      <Gallery pictures={media.spaces?.[space.slug] || []} featured empty="Las imágenes de este espacio se mostrarán aquí cuando estén disponibles." />
+    </section>
   </div>
   <section class="related-section"><div class="wrap">
     <h2>Otros aspectos del proyecto</h2>

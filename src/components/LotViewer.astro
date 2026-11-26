@@ -33,8 +33,9 @@ const [x, y, w, h] = plan.viewBox;
     <div class="lot-details" id="lote-seleccionado">
       <p data-prompt>Selecciona un lote en el plano o en la lista para ver sus datos.</p>
       <p class="sr-only" role="status" data-selection></p>
-      {plan.lots.map(lot => (
-        <div data-detail={lot.id} hidden>
+      {plan.lots.map(lot => {
+        const price = isDemo ? undefined : publicPrice('lot', lot.id);
+        return <div data-detail={lot.id} hidden>
           <p class="eyebrow">{project.typologies.find(type => type.id === lot.type)?.singular}</p>
           <h3>Lote {lot.id}</h3>
           <dl>
@@ -44,13 +45,13 @@ const [x, y, w, h] = plan.viewBox;
             <div><dt>Ubicación</dt><dd>{lot.location}</dd></div>
             <div><dt>Estado</dt><dd>{statusLabel[lot.status]}</dd></div>
           </dl>
-          <p><strong>{priceLabel(isDemo ? undefined : publicPrice('lot', lot.id))}</strong></p>
+          {price && <p><strong>{priceLabel(price)}</strong></p>}
           <div class="button-row">
-            <a class="button" href={inquiry('financiamiento', { lote: lot.id, tipo: lot.type })}>Cotizar este lote</a>
+            <a class="button" href={inquiry('financiamiento', { lote: lot.id, tipo: lot.type })}>{price ? 'Cotizar este lote' : priceLabel()}</a>
             <a class="text-link" data-whatsapp href={wap(isDemo ? `Hola, estoy probando el visor de La Nueva Estancia. Seleccioné el lote ficticio ${lot.id}.` : `Hola, quisiera información sobre el lote ${lot.id} de La Nueva Estancia.`)} target="_blank" rel="noopener noreferrer">Consultar por WhatsApp</a>
           </div>
-        </div>
-      ))}
+        </div>;
+      })}
     </div>
   </div>
   <h3 class="lot-list-heading">Lista de lotes</h3>

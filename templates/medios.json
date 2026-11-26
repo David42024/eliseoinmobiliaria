@@ -10,6 +10,11 @@
   "gallery": [],
   "tour": { "kind": "iframe", "title": "Recorrido de La Nueva Estancia", "src": "/recorrido/index.html", "embed": true },
   "model": null,
+  "spaces": {
+    "parques-y-areas-verdes": [],
+    "recreacion-y-educacion": [],
+    "servicios-y-conectividad": []
+  },
   "typologies": {
     "departamento-multifamiliar": {
       "area": "",

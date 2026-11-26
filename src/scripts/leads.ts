@@ -14,6 +14,8 @@ export function setupLead(root: HTMLElement) {
   const purposeInput = root.querySelector<HTMLSelectElement>('[data-purpose]');
   const summary = root.querySelector<HTMLElement>('[data-selection-summary]')!;
   const simulator = root.querySelector<HTMLElement>('[data-simulator]')!;
+  const quotePrice = root.querySelector<HTMLElement>('[data-quote-price]')!;
+  const quoteInquiry = root.querySelector<HTMLAnchorElement>('[data-quote-inquiry]')!;
   const form = root.querySelector<HTMLFormElement>('[data-form]');
   const feedback = root.querySelector<HTMLElement>('[data-feedback]');
   const submit = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
@@ -35,7 +37,9 @@ export function setupLead(root: HTMLElement) {
     summary.textContent = context;
     const amount = lot ? lot.amount : type?.amount;
     simulator.hidden = mode !== 'quote' || !type;
-    put('[data-quote-price]', amount ? `${!lot && type?.from ? 'Desde ' : ''}${format(amount)}` : 'Consultar precio');
+    quotePrice.hidden = !amount;
+    quotePrice.textContent = amount ? `${!lot && type?.from ? 'Desde ' : ''}${format(amount)}` : '';
+    quoteInquiry.hidden = !!amount;
     const initialPercent = Number(root.dataset.initial);
     const showInitial = !!amount && !!root.dataset.initial && (!type?.from || !!lot);
     root.querySelectorAll<HTMLElement>('[data-initial-row]').forEach(element => { element.hidden = !showInitial; });

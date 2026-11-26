@@ -29,13 +29,16 @@ const icons = { trees: Trees, education: GraduationCap, route: Route };
             <Icon size={30} aria-hidden="true" />
             <h3>{space.label}</h3>
             <p>{space.description}</p>
-            <div class="type-end"><a href={spacePath(space)} class="text-link">Ver {space.label.toLocaleLowerCase('es-PE')}</a></div>
+            <div class="type-end"><a href={spacePath(space)} class="button outline compact">Ver {space.label.toLocaleLowerCase('es-PE')}</a></div>
           </article>
         );
       })}
     </div>
   </section>
-  {media.gallery.length > 0 && <section class="section wrap"><h2>Galería del proyecto</h2><Gallery pictures={media.gallery} /></section>}
+  <section class="section wrap project-gallery">
+    <h2>Galería del proyecto</h2>
+    <Gallery pictures={media.gallery} featured empty="Las imágenes y renders de La Nueva Estancia se mostrarán aquí cuando estén disponibles." />
+  </section>
   <section class="section location-home" id="entrega">
     <div class="wrap split">
       <div><p class="eyebrow">Etapa comercial</p><h2>Preventa sobre planos</h2></div>

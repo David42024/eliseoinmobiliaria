@@ -1,6 +1,7 @@
 ---
 import { Building, CalendarDays, MapPin } from '../components/icons';
 import Site from '../layouts/Site.astro';
+import Gallery from '../components/Gallery.astro';
 import Typologies from '../components/Typologies.astro';
 import VisitBanner from '../components/VisitBanner.astro';
 import { project, spacePath } from '../data/project';
@@ -19,7 +20,7 @@ const price = publicPrice('project', project.id);
         <div class="button-row">
           <a href="/tipologias/#visor" class="button light">Explorar lotes</a>
           <a href="/contacto/?finalidad=visita" class="button on-dark">Solicitar visita</a>
-          {!price && <a href="/financiamiento/" class="text-link hero-quote">Consultar precio</a>}
+          {!price && <a href="/financiamiento/" class="button on-dark">Consultar precio</a>}
         </div>
       </div>
       {media.cover ? (
@@ -49,6 +50,7 @@ const price = publicPrice('project', project.id);
     </div>
     <Typologies />
   </section>
+  {media.gallery.length > 0 && <section class="section wrap home-gallery"><h2>Imágenes de La Nueva Estancia</h2><Gallery pictures={media.gallery} featured /></section>}
   <section class="section location-home">
     <div class="wrap split">
       <div class="location-art" aria-hidden="true"><div></div><MapPin size={58} stroke-width={1.15} /></div>

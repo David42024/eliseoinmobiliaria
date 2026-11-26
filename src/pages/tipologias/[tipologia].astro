@@ -16,6 +16,8 @@ const { type } = Astro.props;
 const details = media.typologies[type.id];
 const area = details?.area || ('area' in type ? type.area : undefined);
 const pictures = [...(details?.renders || []), ...(details?.floorPlan ? [details.floorPlan] : [])];
+const price = publicPrice('typology', type.id);
+const quote = inquiry('financiamiento', { tipo: type.id });
 const Icon = { lot: PanelsTopLeft, apartment: Building, house: House }[type.icon];
 ---
 <Site title={`${type.label} en Víctor Larco | La Nueva Estancia · Elíseo`} description={`${type.description} Consulta precio y disponibilidad en La Nueva Estancia, Víctor Larco.`}>
@@ -25,7 +27,7 @@ const Icon = { lot: PanelsTopLeft, apartment: Building, house: House }[type.icon
       <h2>{type.detailHeading}</h2>
       <p>{type.detail}</p>
       <div class="button-row">
-        <a class="button" href={inquiry('financiamiento', { tipo: type.id })}>Solicitar cotización</a>
+        <a class="button" href={quote}>Solicitar cotización</a>
         {type.icon === 'lot'
           ? <a class="text-link" href="/tipologias/#visor">Abrir el visor de lotes</a>
           : <a class="text-link" href="/ubicacion/">Ver ubicación del proyecto</a>}
@@ -40,10 +42,13 @@ const Icon = { lot: PanelsTopLeft, apartment: Building, house: House }[type.icon
         {type.icon !== 'lot' && details?.bedrooms && <div><dt>Dormitorios</dt><dd>{details.bedrooms}</dd></div>}
         {type.icon !== 'lot' && details?.bathrooms && <div><dt>Baños</dt><dd>{details.bathrooms}</dd></div>}
         <div><dt>Disponibilidad</dt><dd>{details?.availability || 'Por consultar'}</dd></div>
-        <div><dt>Precio</dt><dd>{priceLabel(publicPrice('typology', type.id))}</dd></div>
+        <div><dt>Precio</dt><dd>{price ? priceLabel(price) : <a class="button soft compact" href={quote}>Consultar precio</a>}</dd></div>
       </dl>
     </aside>
-    {pictures.length > 0 && <div class="detail-gallery"><h2>Imágenes de la tipología</h2><Gallery pictures={pictures} /></div>}
+    <section class="detail-gallery">
+      <h2>Imágenes de la tipología</h2>
+      <Gallery pictures={pictures} featured empty="Los renders y planos se mostrarán aquí cuando estén disponibles." />
+    </section>
   </section>
   <section class="related-section"><div class="wrap">
     <h2>Otras tipologías</h2>

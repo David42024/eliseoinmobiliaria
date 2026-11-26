@@ -1,3 +1,6 @@
+const mapCoordinates = encodeURIComponent('-8.132543,-79.026347');
+const mapEmbed = `https://www.google.com/maps?q=${mapCoordinates}&output=embed&z=17&hl=es`;
+
 export const project = {
   id: 'la-nueva-estancia',
   name: 'La Nueva Estancia',
@@ -6,7 +9,9 @@ export const project = {
   delivery: 'Julio de 2027',
   geography: 'La Libertad, Perú',
   mapLink: 'https://maps.app.goo.gl/zvkqPdpbB7C25A9e6',
-  mapEmbed: 'https://maps.google.com/maps?q=-8.132543,-79.026347&output=embed&z=16',
+  mapEmbed,
+  mapSatelliteEmbed: `${mapEmbed}&t=k`,
+  streetView: `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${mapCoordinates}`,
   totals: { lots: 340, homes: 1217, parking: 609 },
   typologies: [
     {

@@ -10,6 +10,7 @@ const icons = { lot: PanelsTopLeft, apartment: Building, house: House };
   {project.typologies.map(type => {
     const Icon = icons[type.icon];
     const detail = media.typologies[type.id];
+    const price = publicPrice('typology', type.id);
     return (
       <article class="type-card" id={expanded ? type.id : undefined}>
         <span class="type-icon"><Icon size={27} stroke-width={1.45} /></span>
@@ -18,10 +19,12 @@ const icons = { lot: PanelsTopLeft, apartment: Building, house: House };
         {(detail?.area || 'area' in type) && <p class="type-area">{detail?.area || ('area' in type ? type.area : '')}</p>}
         {expanded && <p class="property-detail">{detail?.availability || 'Disponibilidad por consultar'}</p>}
         <div class="type-end">
-          <strong>{priceLabel(publicPrice('typology', type.id))}</strong>
+          {price && <strong>{priceLabel(price)}</strong>}
           <div class="type-links">
-            <a class={expanded ? 'button outline' : 'text-link'} href={typologyPath(type)}>Ver {type.label.toLocaleLowerCase('es-PE')}</a>
-            {expanded && <a class="text-link" aria-label={`Cotizar ${type.singular.toLocaleLowerCase('es-PE')}`} href={inquiry('financiamiento', { tipo: type.id })}>Cotizar</a>}
+            <a class="button outline compact" href={typologyPath(type)}>Ver {type.label.toLocaleLowerCase('es-PE')}</a>
+            <a class="button soft compact" href={inquiry('financiamiento', { tipo: type.id })}>
+              {price ? 'Cotizar' : 'Consultar precio'}<span class="sr-only"> · {type.singular}</span>
+            </a>
           </div>
         </div>
       </article>
