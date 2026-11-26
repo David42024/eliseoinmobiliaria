@@ -1,0 +1,30 @@
+---
+import type { Picture } from '../data/media';
+const { pictures } = Astro.props as { pictures: Picture[] };
+---
+<div class="gallery">
+  {pictures.map(pic => (
+    <a href={pic.full || pic.src} target="_blank" rel="noopener" data-expand-image aria-label={`Ampliar: ${pic.alt}`}>
+      <img src={pic.src} srcset={pic.srcset} sizes="(max-width: 650px) 100vw, 380px" width={pic.width} height={pic.height} alt={pic.alt} loading="lazy" decoding="async" />
+    </a>
+  ))}
+</div>
+<dialog class="image-dialog">
+  <form method="dialog"><button class="button" aria-label="Cerrar imagen">Cerrar</button></form>
+  <img alt="" />
+</dialog>
+<script>
+  document.querySelectorAll<HTMLAnchorElement>('[data-expand-image]').forEach(link => {
+    link.addEventListener('click', event => {
+      const dialog = link.closest('.gallery')?.nextElementSibling;
+      if (!(dialog instanceof HTMLDialogElement)) return;
+      const enlarged = dialog.querySelector('img');
+      const thumbnail = link.querySelector('img');
+      if (!enlarged || !thumbnail) return;
+      event.preventDefault();
+      enlarged.src = link.href;
+      enlarged.alt = thumbnail.alt;
+      dialog.showModal();
+    });
+  });
+</script>

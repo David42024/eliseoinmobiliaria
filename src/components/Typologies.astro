@@ -1,0 +1,43 @@
+---
+import { Building, House, PanelsTopLeft } from './icons';
+import { project, inquiry } from '../data/project';
+import { publicPrice, priceLabel } from '../data/commercial';
+import { media } from '../data/media';
+import Gallery from './Gallery.astro';
+const { expanded = false } = Astro.props;
+const icons = { lot: PanelsTopLeft, apartment: Building, house: House };
+---
+<div class="type-grid">
+  {project.typologies.map(type => {
+    const Icon = icons[type.icon];
+    const detail = media.typologies[type.id];
+    return (
+      <article class="type-card" id={expanded ? type.id : undefined}>
+        <span class="type-icon"><Icon size={27} stroke-width={1.45} /></span>
+        <h3>{type.label}</h3>
+        <p>{type.description}</p>
+        {(detail?.area || 'area' in type) && <p class="type-area">{detail?.area || ('area' in type ? type.area : '')}</p>}
+        {expanded && (
+          <div class="property-detail">
+            <p>{detail?.availability || 'Disponibilidad por consultar'}</p>
+            {type.icon !== 'lot' && (detail?.bedrooms || detail?.bathrooms) && (
+              <dl class="property-rooms">
+                {detail.bedrooms && <div><dt>Dormitorios</dt><dd>{detail.bedrooms}</dd></div>}
+                {detail.bathrooms && <div><dt>Baños</dt><dd>{detail.bathrooms}</dd></div>}
+              </dl>
+            )}
+            {((detail?.renders?.length || 0) > 0 || detail?.floorPlan) && (
+              <Gallery pictures={[...(detail?.renders || []), ...(detail?.floorPlan ? [detail.floorPlan] : [])]} />
+            )}
+          </div>
+        )}
+        <div class="type-end">
+          <strong>{priceLabel(publicPrice('typology', type.id))}</strong>
+          <a class="text-link" href={expanded ? inquiry('financiamiento', { tipo: type.id }) : `/tipologias/#${type.id}`}>
+            {expanded ? 'Solicitar cotización' : 'Ver tipología'}
+          </a>
+        </div>
+      </article>
+    );
+  })}
+</div>

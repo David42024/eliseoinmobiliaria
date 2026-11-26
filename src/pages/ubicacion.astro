@@ -1,0 +1,35 @@
+---
+import { Clock, MapPin } from '../components/icons';
+import Site from '../layouts/Site.astro';
+import PageIntro from '../components/PageIntro.astro';
+import { project, contact } from '../data/project';
+---
+<Site title="Ubicación en Av. Huamán | La Nueva Estancia · Elíseo" description="Ubica La Nueva Estancia y la oficina de ventas frente a la Av. Huamán, Víctor Larco, cerca del óvalo La Marina.">
+  <PageIntro title="Frente a la Av. Huamán" section="Ubicación" description="En Víctor Larco, cerca del óvalo La Marina y con acceso a las principales vías de Trujillo." />
+  <section class="section wrap split location-page">
+    <div>
+      <p class="eyebrow">Oficina de ventas</p><h2>Cómo llegar</h2>
+      <p><MapPin size={21} /> {project.address}, {project.district}, {project.geography}.</p>
+      <p><Clock size={21} /> {contact.hours}</p>
+      <div class="button-row"><a class="button" href={project.mapLink} target="_blank" rel="noopener noreferrer">Abrir en Google Maps</a><a class="text-link" href="/contacto/?finalidad=visita">Solicitar visita</a></div>
+    </div>
+    <div class="map-placeholder" data-map={project.mapEmbed}>
+      <MapPin size={42} stroke-width={1.3} /><p>Ubicación de La Nueva Estancia</p>
+      <button class="button outline" type="button">Cargar mapa</button>
+    </div>
+  </section>
+  <section class="section location-home"><div class="wrap">
+    <p class="eyebrow">El entorno</p><h2>Lugares cercanos</h2>
+    <ul class="nearby-list">{project.nearby.map(place => <li><MapPin size={19} />{place}</li>)}</ul>
+  </div></section>
+  <script>
+    const map = document.querySelector<HTMLElement>('[data-map]');
+    map?.querySelector('button')?.addEventListener('click', () => {
+      const frame = document.createElement('iframe');
+      frame.title = 'Ubicación de La Nueva Estancia en Google Maps';
+      frame.referrerPolicy = 'no-referrer';
+      frame.src = map.dataset.map || '';
+      map.replaceChildren(frame);
+    }, { once: true });
+  </script>
+</Site>

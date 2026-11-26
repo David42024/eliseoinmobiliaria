@@ -1,0 +1,18 @@
+---
+import Site from '../layouts/Site.astro';
+import PageIntro from '../components/PageIntro.astro';
+import { legal } from '../data/legal';
+
+export function getStaticPaths() {
+  return (['privacidad', 'reclamaciones'] as const).flatMap(key => {
+    const page = legal[key];
+    return !page.url && page.paragraphs?.some(text => text.trim()) ? [{ params: { legal: key }, props: { page } }] : [];
+  });
+}
+const { page } = Astro.props;
+const title = Astro.params.legal === 'privacidad' ? 'Política de privacidad' : 'Libro de Reclamaciones';
+---
+<Site title={`${title} | Elíseo Inmobiliaria`} description={`${title} de Elíseo Inmobiliaria.`} noindex>
+  <PageIntro title={title} section={title} description="Elíseo Inmobiliaria" />
+  <article class="section wrap prose">{page.paragraphs?.map(paragraph => <p>{paragraph}</p>)}</article>
+</Site>

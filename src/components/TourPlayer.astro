@@ -1,0 +1,20 @@
+---
+import { ExternalLink, Play, ScanLine } from './icons';
+import type { Tour } from '../data/media';
+const { tour, label = 'Iniciar recorrido', tracking = false } = Astro.props as { tour: Tour; label?: string; tracking?: boolean };
+const hasSource = tour.kind !== 'panorama';
+---
+<div class="tour-player" data-tour={JSON.stringify(tour)} data-tracking={String(tracking)}>
+  <div class="tour-poster" data-tour-poster>
+    {tour.poster ? <img src={tour.poster.src} srcset={tour.poster.srcset} sizes="(max-width: 760px) 100vw, 850px" width={tour.poster.width} height={tour.poster.height} alt={tour.poster.alt} loading="lazy" /> : <ScanLine size={56} stroke-width={1} />}
+    {!(tour.kind === 'iframe' && tour.embed === false) && <button type="button" class="button light" data-tour-start><Play size={19} /> {label}</button>}
+  </div>
+  <div class="tour-stage" data-tour-stage hidden></div>
+  <p class="tour-status" role="status" data-tour-status></p>
+  {hasSource && <a class="text-link" href={tour.src} target="_blank" rel="noopener noreferrer" data-tour-open>Abrir en otra pestaña <ExternalLink size={15} /></a>}
+  {!hasSource && <a class="text-link" data-tour-panorama target="_blank" rel="noopener noreferrer" hidden>Abrir imagen panorámica <ExternalLink size={15} /></a>}
+</div>
+<script>
+  import { setupTour } from '../scripts/tour';
+  document.querySelectorAll<HTMLElement>('[data-tour]').forEach(setupTour);
+</script>

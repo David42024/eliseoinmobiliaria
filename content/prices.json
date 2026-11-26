@@ -1,0 +1,19 @@
+{
+  "prices": [
+    { "scope": "project", "id": "la-nueva-estancia", "amount": null, "from": true, "approved": false, "validFrom": null },
+    { "scope": "typology", "id": "lote-unifamiliar", "amount": null, "from": true, "approved": false, "validFrom": null },
+    { "scope": "typology", "id": "departamento-multifamiliar", "amount": null, "from": true, "approved": false, "validFrom": null },
+    { "scope": "typology", "id": "casa-conjunto", "amount": null, "approved": false, "validFrom": null },
+    { "scope": "parking", "id": "estacionamiento", "amount": null, "approved": false, "validFrom": null }
+  ],
+  "proposedRates": [],
+  "proposedAdjustments": [],
+  "multipleLocationRule": null,
+  "initial": { "percent": null, "approved": false, "validFrom": null },
+  "installments": { "approved": false, "validFrom": null, "annualEffectiveRate": null, "months": null, "rule": null },
+  "modalities": [
+    { "id": "directo", "label": "Financiamiento directo", "description": "", "approved": false, "validFrom": null },
+    { "id": "bancario", "label": "Financiamiento bancario", "description": "", "approved": false, "validFrom": null },
+    { "id": "mivivienda", "label": "Asesoría sobre Crédito MIVIVIENDA", "description": "", "approved": false, "validFrom": null }
+  ]
+}

@@ -1,0 +1,70 @@
+---
+import { MessageCircle } from './icons';
+import { contact, project, wap } from '../data/project';
+import { legalLink } from '../data/legal';
+import { inventory, official } from '../data/inventory';
+import { publicPrice, financing, installmentTerms } from '../data/commercial';
+const { mode = 'contact' } = Astro.props as { mode?: 'contact' | 'quote' };
+const privacy = legalLink('privacidad');
+const canSubmit = import.meta.env.PUBLIC_LEAD_FORM === 'true' && !!privacy;
+const types = project.typologies.map(type => ({
+  id: type.id, label: type.singular,
+  amount: mode === 'quote' ? publicPrice('typology', type.id)?.amount : undefined,
+  from: mode === 'quote' ? publicPrice('typology', type.id)?.from : undefined,
+}));
+const lots = inventory?.lots.map(lot => ({
+  id: lot.id, type: lot.type, demo: !official.published,
+  amount: mode === 'quote' && official.published ? publicPrice('lot', lot.id)?.amount : undefined,
+})) || [];
+const order = [contact.numbers[contact.primary], ...contact.numbers.filter((_, index) => index !== contact.primary)];
+const displayNumber = (number: string) => `+51 ${number.slice(2, 5)} ${number.slice(5, 8)} ${number.slice(8)}`;
+---
+<section class="lead-panel" data-lead data-mode={mode} data-lots={JSON.stringify(lots)} data-types={JSON.stringify(types)}
+  data-initial={mode === 'quote' ? financing.initial : null} data-terms={mode === 'quote' && installmentTerms ? JSON.stringify(installmentTerms) : undefined}>
+  <h2>{mode === 'quote' ? 'Solicita una cotización' : 'Habla con Elíseo'}</h2>
+  <p data-selection-summary hidden></p>
+  <div data-simulator hidden>
+    <dl class="quote-result">
+      <div><dt>Precio</dt><dd data-quote-price></dd></div>
+      <div data-initial-row hidden><dt>Cuota inicial</dt><dd data-quote-initial></dd></div>
+      <div data-initial-row hidden><dt>Saldo</dt><dd data-quote-balance></dd></div>
+      <div data-installments-row hidden><dt data-installment-label>Cuota mensual estimada</dt><dd data-quote-installment></dd></div>
+    </dl>
+  </div>
+  {mode === 'quote' && (
+    <label>Tipología de interés
+      <select name="type" data-type form={canSubmit ? 'lead-form' : undefined}>
+        <option value="">Selecciona una opción</option>
+        {types.map(type => <option value={type.id}>{type.label}</option>)}
+      </select>
+    </label>
+  )}
+  {canSubmit ? (
+    <form id="lead-form" action="/api/solicitudes" method="post" data-form>
+      {mode === 'contact' && (
+        <label>Tipo de solicitud
+          <select name="purpose" data-purpose><option value="informacion">Información</option><option value="visita">Solicitar visita</option></select>
+        </label>
+      )}
+      <label>Nombre completo<input name="name" autocomplete="name" required maxlength="100" /></label>
+      <label>Celular<input name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="Ej. 987 654 321" required maxlength="24" /></label>
+      <label>Correo electrónico<input name="email" type="email" autocomplete="email" required maxlength="150" /></label>
+      <label class="trap" aria-hidden="true">Sitio web<input name="website" tabindex="-1" autocomplete="off" /></label>
+      <label class="consent-check"><input type="checkbox" name="consent" required /><span>Acepto el tratamiento de mis datos según la <a href={privacy}>Política de privacidad</a>.</span></label>
+      <button type="submit" class="button" disabled>Enviar solicitud</button>
+      <p data-feedback class="form-feedback" role="status"></p>
+      <noscript><p>Para enviar este formulario, activa JavaScript o comunícate por WhatsApp.</p></noscript>
+    </form>
+  ) : <p>{mode === 'quote' ? 'Pide el precio vigente y orientación sobre las opciones de pago por WhatsApp.' : 'Escríbenos por WhatsApp. Un asesor te contactará para coordinar tu visita.'}</p>}
+  <div class="contact-channels">
+    {order.map((number, index) => (
+      <a data-channel={number} data-whatsapp href={wap(undefined, number)} target="_blank" rel="noopener noreferrer">
+        <MessageCircle size={22} /> <span><strong>{displayNumber(number)}</strong><small>{index === 0 ? 'WhatsApp de ventas' : 'WhatsApp alternativo'}</small></span>
+      </a>
+    ))}
+  </div>
+</section>
+<script>
+  import { setupLead } from '../scripts/leads';
+  document.querySelectorAll<HTMLElement>('[data-lead]').forEach(setupLead);
+</script>

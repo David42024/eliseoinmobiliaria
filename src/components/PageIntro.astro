@@ -1,0 +1,11 @@
+---
+import { ChevronRight } from './icons';
+const { title, section, description } = Astro.props as { title: string; section: string; description: string };
+---
+<section class="page-intro">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="/">Inicio</a><ChevronRight size={15} /><span aria-current="page">{section}</span></div>
+    <h1>{title}</h1>
+    <p>{description}</p>
+  </div>
+</section>

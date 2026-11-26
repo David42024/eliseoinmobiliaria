@@ -1,0 +1,21 @@
+---
+import Site from '../layouts/Site.astro';
+import PageIntro from '../components/PageIntro.astro';
+import VisitBanner from '../components/VisitBanner.astro';
+import { project } from '../data/project';
+---
+<Site title="Nosotros | Elíseo Inmobiliaria" description="Conoce la trayectoria de Elíseo en habilitación urbana, lotes y departamentos y los proyectos que forman parte de su historia.">
+  <PageIntro title="Elíseo Inmobiliaria" section="Nosotros" description="Más de 35 años de experiencia en habilitaciones urbanas, lotes para vivienda y departamentos." />
+  <section class="section wrap split about-history">
+    <div>
+      <p class="eyebrow">Trayectoria</p><h2>Proyectos de Elíseo</h2>
+      <p>Desde Residencial Los Cedros hasta Mirador de La Libertad, estos proyectos forman parte de la trayectoria de Elíseo.</p>
+      <img src="/marca/eliseo.webp" width="320" height="217" alt="Logotipo de Elíseo" loading="lazy" />
+    </div>
+    <ol class="timeline">
+      {project.portfolio.map(([year, name]) => <li><time datetime={String(year)}>{year}</time><h3>{name}</h3></li>)}
+      <li><time datetime="2026">2026</time><h3><a href="/proyecto/">La Nueva Estancia</a></h3><p>Proyecto en preventa</p></li>
+    </ol>
+  </section>
+  <VisitBanner />
+</Site>

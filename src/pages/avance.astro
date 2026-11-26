@@ -1,0 +1,22 @@
+---
+import { HardHat } from '../components/icons';
+import Site from '../layouts/Site.astro';
+import PageIntro from '../components/PageIntro.astro';
+import TourPlayer from '../components/TourPlayer.astro';
+import Gallery from '../components/Gallery.astro';
+import { media } from '../data/media';
+const milestones = media.progress.filter(item => item.approved && /^\d{4}-\d{2}-\d{2}$/.test(item.date) && (item.photos?.length || item.video)).sort((a, b) => b.date.localeCompare(a.date));
+const date = new Intl.DateTimeFormat('es-PE', { dateStyle: 'long', timeZone: 'UTC' });
+---
+<Site title="Avance de obra | La Nueva Estancia · Elíseo" description="Consulta los hitos y las actualizaciones documentadas de la habilitación urbana La Nueva Estancia.">
+  <PageIntro title="Avance de obra" section="Avance" description="Sigue los hitos de la habilitación urbana de La Nueva Estancia." />
+  <section class="section wrap">
+    {milestones.length ? (
+      <ol class="timeline">{milestones.map(item => <li>
+        <time datetime={item.date}>{date.format(new Date(item.date))}</time><h2>{item.title}</h2><p>{item.summary}</p>
+        {item.photos?.length && <Gallery pictures={item.photos} />}
+        {item.video && <TourPlayer tour={item.video} label="Reproducir video" />}
+      </li>)}</ol>
+    ) : <div class="empty-panel"><span class="type-icon"><HardHat size={28} /></span><h2>Aún no hay actualizaciones publicadas</h2><p>Consulta al equipo de ventas por el estado actual de La Nueva Estancia.</p><a class="button" href="/contacto/">Contactar a Elíseo</a></div>}
+  </section>
+</Site>

@@ -1,0 +1,100 @@
+---
+import { ArrowUpRight, Clock, MapPin, Menu, MessageCircle } from '../components/icons';
+import { navigation, project, contact, wap } from '../data/project';
+import { legalLink } from '../data/legal';
+import '../styles/site.css';
+
+interface Props { title: string; description: string; noindex?: boolean }
+const { title, description, noindex = false } = Astro.props;
+const path = Astro.url.pathname;
+const canonical = Astro.site ? new URL(path, Astro.site) : undefined;
+const ga4 = import.meta.env.PROD && /^G-[A-Z0-9]+$/.test(import.meta.env.PUBLIC_GA4_ID ?? '') ? import.meta.env.PUBLIC_GA4_ID : '';
+const privacy = legalLink('privacidad');
+const claims = legalLink('reclamaciones');
+---
+<!doctype html>
+<html lang="es-PE">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#153126" />
+    {(!Astro.site || noindex) && <meta name="robots" content="noindex, follow" />}
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_PE" />
+    <meta property="og:site_name" content="Elíseo Inmobiliaria" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    {Astro.site && <meta property="og:image" content={new URL('/marca/eliseo.webp', Astro.site)} />}
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/png" href="/marca/icono.png" />
+    <title>{title}</title>
+  </head>
+  <body data-ga4={ga4}>
+    <a class="skip" href="#contenido">Saltar al contenido</a>
+    <header class="site-header">
+      <div class="wrap header-row">
+        <a class="brand" href="/" aria-label="Elíseo Inmobiliaria, inicio">
+          <img src="/marca/simbolo.webp" width="44" height="39" alt="" />
+          <span><strong>ELÍSEO</strong><small>INMOBILIARIA</small></span>
+        </a>
+        <nav class="desktop-nav" aria-label="Navegación principal">
+          {navigation.map(([label, href]) => <a href={href} aria-current={path === href ? 'page' : undefined}>{label}</a>)}
+        </nav>
+        <a class="button header-visit" href="/contacto/?finalidad=visita">Solicitar visita</a>
+        <details class="mobile-nav">
+          <summary aria-label="Menú principal"><Menu size={23} /><span>Menú</span></summary>
+          <nav aria-label="Navegación móvil">
+            <a href="/" aria-current={path === '/' ? 'page' : undefined}>Inicio</a>
+            {navigation.map(([label, href]) => <a href={href} aria-current={path === href ? 'page' : undefined}>{label}</a>)}
+          </nav>
+        </details>
+      </div>
+    </header>
+    <main id="contenido"><slot /></main>
+    <footer class="site-footer">
+      <div class="wrap footer-top">
+        <div class="footer-brand">
+          <a class="brand" href="/" aria-label="Elíseo Inmobiliaria, inicio">
+            <img src="/marca/simbolo-claro.webp" width="44" height="39" alt="" />
+            <span><strong>ELÍSEO</strong><small>INMOBILIARIA</small></span>
+          </a>
+          <p>Habilitación urbana y vivienda en Trujillo, Perú.</p>
+        </div>
+        <div>
+          <h2>El proyecto</h2>
+          <a href="/proyecto/">La Nueva Estancia</a>
+          <a href="/tipologias/#visor">Visor de lotes</a>
+          <a href="/ubicacion/">Cómo llegar</a>
+          <a href="/nosotros/">Nuestra trayectoria</a>
+        </div>
+        <div>
+          <h2>Oficina de ventas</h2>
+          <p><MapPin size={17} /> Frente a la Av. Huamán, {project.district}</p>
+          <p><Clock size={17} /> {contact.hours}</p>
+          <a href={`mailto:${contact.email}`}>{contact.email}</a>
+        </div>
+      </div>
+      <div class="wrap footer-bottom">
+        <span>© {new Date().getFullYear()} Elíseo Inmobiliaria</span>
+        <div>
+          {privacy && <a href={privacy}>Privacidad</a>}
+          {claims && <a href={claims}>Libro de Reclamaciones</a>}
+          {ga4 && <button type="button" data-analytics-settings>Preferencias de medición</button>}
+          <a href={wap()} target="_blank" rel="noopener noreferrer" data-whatsapp>WhatsApp <ArrowUpRight size={15} /></a>
+        </div>
+      </div>
+    </footer>
+    <a class="floating-wa" href={wap()} target="_blank" rel="noopener noreferrer" aria-label="Consultar por WhatsApp" data-whatsapp><MessageCircle size={25} /></a>
+    {ga4 && <aside id="analytics-consent" aria-label="Preferencias de medición" class="analytics-consent" hidden>
+      <p>¿Permites la medición de visitas y acciones de navegación?</p>
+      <button class="button" type="button" data-consent="allow">Permitir</button>
+      <button class="button outline" type="button" data-consent="deny">Rechazar</button>
+    </aside>}
+    <script>
+      import '../scripts/analytics';
+    </script>
+  </body>
+</html>

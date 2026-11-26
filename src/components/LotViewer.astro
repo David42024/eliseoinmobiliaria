@@ -1,0 +1,64 @@
+---
+import { Minus, Plus, RotateCcw } from './icons';
+import { statusLabel, type Inventory } from '../data/inventory';
+import { project, areaFormat, inquiry, wap } from '../data/project';
+import { publicPrice, priceLabel } from '../data/commercial';
+const { plan, isDemo } = Astro.props as { plan: Inventory; isDemo: boolean };
+const [x, y, w, h] = plan.viewBox;
+---
+<div class="lot-viewer" data-viewer>
+  {isDemo && <p class="demo-tag">Demostración · Lotes, estados y geometrías ficticios</p>}
+  <div class="lot-filters" aria-label="Filtrar lotes">
+    <label>Estado<select data-status><option value="">Todos los estados</option>{Object.entries(statusLabel).map(([key, value]) => <option value={key}>{value}</option>)}</select></label>
+    <label>Área mínima (m²)<input type="number" inputmode="decimal" min="0" step="any" data-min /></label>
+    <label>Área máxima (m²)<input type="number" inputmode="decimal" min="0" step="any" data-max /></label>
+  </div>
+  <p class="lot-help" aria-live="polite" data-count>{plan.lots.length} lotes para explorar</p>
+  <ul class="lot-legend" aria-label="Leyenda">
+    {Object.entries(statusLabel).map(([key, value]) => <li><span class={`swatch ${key}`}></span>{value}</li>)}
+  </ul>
+  <div class="lot-layout">
+    <div class="plan-shell">
+      <div class="plan-tools" aria-label="Controles del plano">
+        <button type="button" data-zoom="in" aria-label="Acercar"><Plus size={20} /></button>
+        <button type="button" data-zoom="out" aria-label="Alejar"><Minus size={20} /></button>
+        <button type="button" data-zoom="reset" aria-label="Restablecer vista"><RotateCcw size={17} /></button>
+      </div>
+      <svg class="lot-map" viewBox={plan.viewBox.join(' ')} role="group" aria-label={isDemo ? 'Plano de demostración' : 'Plano maestro de La Nueva Estancia'}>
+        {plan.planImage && <image href={plan.planImage} x={x} y={y} width={w} height={h} preserveAspectRatio="none" />}
+        {plan.lots.map(lot => <polygon points={plan.geometries[lot.geometry]} class={lot.status} data-polygon={lot.id}><title>{lot.id} · {statusLabel[lot.status]}</title></polygon>)}
+      </svg>
+      <p class="lot-help">Arrastra para mover el plano. Usa dos dedos o los botones para acercar.</p>
+    </div>
+    <div class="lot-details" id="lote-seleccionado">
+      <p data-prompt>Selecciona un lote en el plano o en la lista para ver sus datos.</p>
+      <p class="sr-only" role="status" data-selection></p>
+      {plan.lots.map(lot => (
+        <div data-detail={lot.id} hidden>
+          <p class="eyebrow">{project.typologies.find(type => type.id === lot.type)?.singular}</p>
+          <h3>Lote {lot.id}</h3>
+          <dl>
+            <div><dt>Manzana</dt><dd>{lot.block}</dd></div>
+            <div><dt>Superficie</dt><dd>{areaFormat.format(lot.area)} m²</dd></div>
+            <div><dt>Orientación</dt><dd>{lot.orientation}</dd></div>
+            <div><dt>Ubicación</dt><dd>{lot.location}</dd></div>
+            <div><dt>Estado</dt><dd>{statusLabel[lot.status]}</dd></div>
+          </dl>
+          <p><strong>{priceLabel(isDemo ? undefined : publicPrice('lot', lot.id))}</strong></p>
+          <div class="button-row">
+            <a class="button" href={inquiry('financiamiento', { lote: lot.id, tipo: lot.type })}>Cotizar este lote</a>
+            <a class="text-link" data-whatsapp href={wap(isDemo ? `Hola, estoy probando el visor de La Nueva Estancia. Seleccioné el lote ficticio ${lot.id}.` : `Hola, quisiera información sobre el lote ${lot.id} de La Nueva Estancia.`)} target="_blank" rel="noopener noreferrer">Consultar por WhatsApp</a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+  <h3 class="lot-list-heading">Lista de lotes</h3>
+  <ul class="lot-list">
+    {plan.lots.map(lot => <li data-lot={lot.id} data-status-value={lot.status} data-area={lot.area}><button type="button" aria-pressed="false"><strong>{lot.id}</strong><span>{areaFormat.format(lot.area)} m² · {statusLabel[lot.status]}</span></button></li>)}
+  </ul>
+</div>
+<script>
+  import { setupLotViewer } from '../scripts/lot-viewer';
+  document.querySelectorAll<HTMLElement>('[data-viewer]').forEach(setupLotViewer);
+</script>

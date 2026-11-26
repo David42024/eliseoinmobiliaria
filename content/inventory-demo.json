@@ -1,0 +1,21 @@
+{
+  "published": false,
+  "viewBox": [0, 0, 640, 440],
+  "planImage": "",
+  "geometries": {
+    "demo-a1": "120,75 210,75 210,175 120,175",
+    "demo-a2": "215,75 305,75 305,175 215,175",
+    "demo-a3": "310,75 400,75 400,175 310,175",
+    "demo-b1": "120,250 235,250 235,365 120,365",
+    "demo-b2": "240,250 350,250 350,365 240,365",
+    "demo-b3": "355,250 470,250 470,365 355,365"
+  },
+  "lots": [
+    { "id": "DEMO-A01", "block": "A", "type": "lote-unifamiliar", "area": 162, "orientation": "Norte", "location": "calle", "status": "libre", "geometry": "demo-a1" },
+    { "id": "DEMO-A02", "block": "A", "type": "lote-unifamiliar", "area": 180, "orientation": "Norte", "location": "parque", "status": "separado", "geometry": "demo-a2" },
+    { "id": "DEMO-A03", "block": "A", "type": "lote-unifamiliar", "area": 192, "orientation": "Norte", "location": "esquina", "status": "vendido", "geometry": "demo-a3" },
+    { "id": "DEMO-B01", "block": "B", "type": "lote-unifamiliar", "area": 216, "orientation": "Sur", "location": "calle", "status": "libre", "geometry": "demo-b1" },
+    { "id": "DEMO-B02", "block": "B", "type": "lote-unifamiliar", "area": 240, "orientation": "Sur", "location": "avenida", "status": "libre", "geometry": "demo-b2" },
+    { "id": "DEMO-B03", "block": "B", "type": "lote-unifamiliar", "area": 288, "orientation": "Sur", "location": "parque", "status": "separado", "geometry": "demo-b3" }
+  ]
+}

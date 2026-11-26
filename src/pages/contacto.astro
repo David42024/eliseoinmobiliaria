@@ -1,0 +1,20 @@
+---
+import { Clock, Mail, MapPin } from '../components/icons';
+import Site from '../layouts/Site.astro';
+import PageIntro from '../components/PageIntro.astro';
+import LeadForm from '../components/LeadForm.astro';
+import { contact, project, inquiry } from '../data/project';
+---
+<Site title="Contacto y visitas | La Nueva Estancia · Elíseo" description="Solicita una visita a La Nueva Estancia o conversa con Elíseo por WhatsApp. Consulta la dirección y el horario de la oficina de ventas.">
+  <PageIntro title="Contacto y visitas" section="Contacto" description="Un asesor de Elíseo puede orientarte sobre el proyecto y coordinar tu visita." />
+  <section class="section wrap split">
+    <div class="contact-info">
+      <p class="eyebrow">Atención comercial</p><h2>Oficina de ventas</h2>
+      <p><MapPin size={21} /> {project.address}, {project.district}.</p>
+      <p><Clock size={21} /> {contact.hours}</p>
+      <p><Mail size={21} /> <a href={`mailto:${contact.email}`}>{contact.email}</a></p>
+      <div class="button-row"><a class="text-link" href={project.mapLink} target="_blank" rel="noopener noreferrer">Cómo llegar</a><a class="text-link" href={inquiry('financiamiento')}>Solicitar cotización</a></div>
+    </div>
+    <LeadForm />
+  </section>
+</Site>

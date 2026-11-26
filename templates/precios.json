@@ -1,0 +1,9 @@
+{
+  "prices": [
+    { "scope": "project", "id": "la-nueva-estancia", "amount": null, "from": true, "approved": false, "validFrom": null, "validTo": null },
+    { "scope": "typology", "id": "lote-unifamiliar", "amount": null, "from": true, "approved": false, "validFrom": null, "validTo": null },
+    { "scope": "lot", "id": "", "amount": null, "approved": false, "validFrom": null, "validTo": null }
+  ],
+  "initial": { "percent": null, "approved": false, "validFrom": null },
+  "installments": { "annualEffectiveRate": null, "months": null, "rule": null, "approved": false, "validFrom": null }
+}

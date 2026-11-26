@@ -1,0 +1,23 @@
+{
+  "cover": {
+    "src": "/medios/portada-960.webp",
+    "srcset": "/medios/portada-480.webp 480w, /medios/portada-960.webp 960w",
+    "full": "/medios/portada-1600.webp",
+    "width": 960,
+    "height": 640,
+    "alt": ""
+  },
+  "gallery": [],
+  "tour": { "kind": "iframe", "title": "Recorrido de La Nueva Estancia", "src": "/recorrido/index.html", "embed": true },
+  "model": null,
+  "typologies": {
+    "departamento-multifamiliar": {
+      "area": "",
+      "bedrooms": null,
+      "bathrooms": null,
+      "availability": "",
+      "floorPlan": null,
+      "renders": []
+    }
+  }
+}
