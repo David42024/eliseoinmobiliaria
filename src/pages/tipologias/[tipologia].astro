@@ -6,7 +6,7 @@ import PageIntro from '../../components/PageIntro.astro';
 import QuoteAction from '../../components/QuoteAction.astro';
 import Site from '../../layouts/Site.astro';
 import { project, typologyPath } from '../../data/project';
-import { priceDetails, priceLabel, publicPrice } from '../../data/commercial';
+import { displayPrice, priceDetails, priceLabel } from '../../data/commercial';
 import { media } from '../../data/media';
 
 export function getStaticPaths() {
@@ -15,9 +15,9 @@ export function getStaticPaths() {
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 const { type } = Astro.props;
 const details = media.typologies[type.id];
-const area = details?.area || ('area' in type ? type.area : undefined);
+const area = details?.area || type.area;
 const pictures = [...(details?.renders || []), ...(details?.floorPlan ? [details.floorPlan] : [])];
-const price = publicPrice('typology', type.id);
+const price = displayPrice('typology', type.id);
 const commercialDetails = price ? priceDetails(price) : '';
 const Icon = { lot: PanelsTopLeft, apartment: Building, house: House }[type.icon];
 ---
@@ -43,7 +43,7 @@ const Icon = { lot: PanelsTopLeft, apartment: Building, house: House }[type.icon
         {type.icon !== 'lot' && details?.bedrooms && <div><dt>Dormitorios</dt><dd>{details.bedrooms}</dd></div>}
         {type.icon !== 'lot' && details?.bathrooms && <div><dt>Baños</dt><dd>{details.bathrooms}</dd></div>}
         <div><dt>Disponibilidad</dt><dd>{details?.availability || 'Por consultar'}</dd></div>
-        <div><dt>Precio</dt><dd>{price ? priceLabel(price) : <QuoteAction class="button soft compact" type={type.id}>Consultar precio</QuoteAction>}</dd></div>
+        <div><dt>Precio</dt><dd>{price ? <>{priceLabel(price)}{price.reference && <small class="price-reference">Precio referencial</small>}</> : <QuoteAction class="button soft compact" type={type.id}>Consultar precio</QuoteAction>}</dd></div>
         {commercialDetails && <div><dt>Referencia comercial</dt><dd>{commercialDetails}</dd></div>}
       </dl>
     </aside>

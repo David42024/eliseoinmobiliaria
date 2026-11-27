@@ -14,6 +14,6 @@ La propuesta contempla 340 lotes proyectados, parques, áreas verdes, espacios d
 
 ## Cotizaciones y visitas
 
-El precio vigente, el stock, los plazos, la cuota inicial y las opciones de pago se confirman con un asesor. Las tarjetas del sitio permiten abrir la ficha o ir a Financiamiento con la tipología seleccionada. Las imágenes referenciales ilustran cada tipología y el inventario de demostración no representa disponibilidad de venta.
+El precio final, el stock, los plazos, la cuota inicial y las opciones de pago se confirman con un asesor. Desde las tarjetas del sitio se puede abrir la ficha, solicitar una cotización o pedir una visita guiada. Las imágenes referenciales ilustran cada tipología y el inventario de demostración no representa disponibilidad de venta.
 
 Para agendar una visita guiada, usa la página Contacto o envía un mensaje por WhatsApp a ventas al +51 923 963 761. El WhatsApp alternativo es +51 987 923 466. La oficina de ventas atiende de lunes a sábado, de 7:00 a. m. a 7:00 p. m. El correo para consultas generales es eliseoinmobiliaria4@gmail.com.

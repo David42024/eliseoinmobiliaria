@@ -5,14 +5,14 @@ import QuoteEmailForm from './QuoteEmailForm.astro';
 import { contact, project, salesMessage, wap } from '../data/project';
 import { legalLink } from '../data/legal';
 import { inventory, official } from '../data/inventory';
-import { publicPrice, financing, installmentTerms } from '../data/commercial';
+import { displayPrice, publicPrice, financing, installmentTerms } from '../data/commercial';
 const { mode = 'contact' } = Astro.props as { mode?: 'contact' | 'quote' };
 const isQuote = mode === 'quote';
 const privacy = legalLink('privacidad');
 const canSubmit = import.meta.env.PUBLIC_LEAD_FORM === 'true' && !!privacy;
 const types = project.typologies.map(type => {
-  const price = isQuote ? publicPrice('typology', type.id) : undefined;
-  return { id: type.id, label: type.singular, amount: price?.amount, from: price?.from, approximate: price?.approximate };
+  const price = isQuote ? displayPrice('typology', type.id) : undefined;
+  return { id: type.id, label: type.singular, amount: price?.amount, from: price?.from, approximate: price?.approximate, reference: price?.reference };
 });
 const lots = inventory?.lots.map(lot => ({
   id: lot.id, type: lot.type, demo: !official.published,
@@ -30,6 +30,7 @@ const defaultMessage = salesMessage(isQuote ? 'cotizacion' : 'informacion');
     <dl class="quote-result">
       <div><dt>Precio</dt><dd>
         <span data-quote-price hidden></span>
+        <small class="price-reference" data-quote-reference hidden>Precio referencial</small>
         <a class="button soft compact" data-quote-inquiry href="#canales-cotizacion">Consultar precio</a>
       </dd></div>
       <div data-initial-row hidden><dt>Cuota inicial</dt><dd data-quote-initial></dd></div>
@@ -54,7 +55,7 @@ const defaultMessage = salesMessage(isQuote ? 'cotizacion' : 'informacion');
     <section class="contact-method" aria-labelledby="contact-whatsapp-title">
       <h3 id="contact-whatsapp-title">Por WhatsApp</h3>
       <div class="contact-actions">
-        {!isQuote && <a class="contact-choice" href={wap(salesMessage('visita'), order[0])} target="_blank" rel="noopener noreferrer" data-whatsapp>
+        {!isQuote && <a class="contact-choice" href={wap(salesMessage('visita'), order[0])} target="_blank" rel="noopener noreferrer" data-visit-channel={order[0]} data-whatsapp>
           <span class="contact-choice-icon"><CalendarDays size={22} aria-hidden="true" /></span>
           <span><strong>Agendar una visita</strong><small>Coordina el día y la hora con un asesor</small></span>
           <ChevronRight size={18} aria-hidden="true" />

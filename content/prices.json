@@ -1,10 +1,10 @@
 {
   "prices": [
     { "scope": "project", "id": "la-nueva-estancia", "amount": null, "from": true, "approved": false, "validFrom": null },
-    { "scope": "typology", "id": "lote-unifamiliar", "amount": null, "from": true, "approved": false, "validFrom": null },
-    { "scope": "typology", "id": "departamento-multifamiliar", "amount": null, "from": true, "approved": false, "validFrom": null },
-    { "scope": "typology", "id": "casa-conjunto", "amount": null, "approved": false, "validFrom": null },
-    { "scope": "parking", "id": "estacionamiento", "amount": null, "approved": false, "validFrom": null }
+    { "scope": "typology", "id": "lote-unifamiliar", "amount": 97200, "from": true, "perM2": 600, "stage": "Etapa Fundadores", "reference": true, "approved": false, "validFrom": null },
+    { "scope": "typology", "id": "departamento-multifamiliar", "amount": 141250, "from": true, "perM2": 1130, "stage": "Etapa Fundadores", "reference": true, "approved": false, "validFrom": null },
+    { "scope": "typology", "id": "casa-conjunto", "amount": 305694, "approximate": true, "reference": true, "approved": false, "validFrom": null },
+    { "scope": "parking", "id": "estacionamiento", "amount": 6000, "reference": true, "approved": false, "validFrom": null }
   ],
   "proposedRates": [],
   "proposedAdjustments": [],

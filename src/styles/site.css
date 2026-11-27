@@ -161,13 +161,18 @@ p + p { margin-top: .65rem; }
   .type-card:hover .type-media img { transform: scale(1.045); }
 }
 .type-card h3 + p { margin-top: .65rem; }
+.type-card .type-location { margin-top: .4rem; color: var(--leaf); font-size: .88rem; }
 .type-card .type-area { margin-top: .8rem; font-weight: 750; color: var(--leaf); }
 .type-end { display: grid; width: 100%; min-width: 0; gap: .55rem; margin-top: auto; padding-top: 1.25rem; }
 .type-end .button { max-width: 100%; }
-.type-price { display: grid; gap: .15rem; border-top: 1px solid var(--line); padding-top: .88rem; }
+.type-price { display: grid; gap: .2rem; border-top: 1px solid var(--line); padding-top: .88rem; }
+.type-price-qualifier { color: var(--leaf); font-size: .9rem; font-weight: 700; }
+.type-price strong { font: 400 clamp(1.55rem, 2.65vw, 2.45rem)/1.12 var(--serif); }
 .type-price small { color: var(--ink-muted); }
+.price-reference { display: block; color: var(--ink-muted); font-size: .83rem; font-weight: 450; }
 .type-links { display: grid; gap: .55rem; }
 .type-links .button { width: 100%; }
+.type-detail-link { justify-self: center; min-height: 44px; text-align: center; }
 .parking-price { margin-top: 1rem; }
 .property-detail { padding-top: .75rem; width: 100%; }
 .location-home { background: var(--soft); }

@@ -2,7 +2,7 @@ import { track, attribution } from './analytics';
 import { demoLotMessage, salesMessage, wap } from '../data/project';
 
 type Lot = { id: string; type: string; demo: boolean; amount?: number };
-type Type = { id: string; label: string; amount?: number; from?: boolean; approximate?: boolean };
+type Type = { id: string; label: string; amount?: number; from?: boolean; approximate?: boolean; reference?: boolean };
 
 export function setupLead(root: HTMLElement) {
   const mode = root.dataset.mode;
@@ -16,8 +16,10 @@ export function setupLead(root: HTMLElement) {
   const summary = root.querySelector<HTMLElement>('[data-selection-summary]')!;
   const simulator = root.querySelector<HTMLElement>('[data-simulator]')!;
   const quotePrice = root.querySelector<HTMLElement>('[data-quote-price]')!;
+  const quoteReference = root.querySelector<HTMLElement>('[data-quote-reference]')!;
   const quoteInquiry = root.querySelector<HTMLAnchorElement>('[data-quote-inquiry]')!;
   const quoteContext = mode === 'quote' ? root.querySelector<HTMLInputElement>('[data-quote-context]') : null;
+  const visitChannel = root.querySelector<HTMLAnchorElement>('[data-visit-channel]');
   const form = root.querySelector<HTMLFormElement>('[data-form]');
   const feedback = root.querySelector<HTMLElement>('[data-feedback]');
   const submit = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
@@ -41,10 +43,12 @@ export function setupLead(root: HTMLElement) {
     simulator.hidden = mode !== 'quote' || !type;
     quotePrice.hidden = !amount;
     const pricePrefix = !lot ? (type?.from ? 'Desde ' : type?.approximate ? 'Aprox. ' : '') : '';
+    const isReference = !lot && !!type?.reference;
     quotePrice.textContent = amount ? `${pricePrefix}${format(amount)}` : '';
+    quoteReference.hidden = !amount || !isReference;
     quoteInquiry.hidden = !!amount;
     const initialPercent = Number(root.dataset.initial);
-    const showInitial = !!amount && !!root.dataset.initial && !pricePrefix;
+    const showInitial = !!amount && !!root.dataset.initial && !pricePrefix && !isReference;
     root.querySelectorAll<HTMLElement>('[data-initial-row]').forEach(element => { element.hidden = !showInitial; });
     const initial = showInitial ? Math.round(amount * initialPercent) / 100 : 0;
     const balance = showInitial ? amount - initial : 0;
@@ -61,6 +65,7 @@ export function setupLead(root: HTMLElement) {
     }
     const message = lot?.demo ? demoLotMessage(lot.id) : salesMessage(purpose, context);
     if (quoteContext) quoteContext.value = [type?.label, lot && context].filter(Boolean).join(' · ') || 'Sin preferencia';
+    if (visitChannel) visitChannel.href = wap(salesMessage('visita', context), visitChannel.dataset.visitChannel);
     root.querySelectorAll<HTMLAnchorElement>('[data-channel]').forEach(link => {
       link.href = wap(message, link.dataset.channel);
     });

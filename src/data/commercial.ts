@@ -5,6 +5,7 @@ export type Price = Approval & {
   scope: string;
   id: string;
   amount: number;
+  reference?: boolean;
   from?: boolean;
   approximate?: boolean;
   perM2?: number;
@@ -22,16 +23,22 @@ const isPositive = (value: unknown): value is number =>
 
 export const publicPrice = (scope: string, id: string) =>
   (data.prices as PriceRecord[])
-    .filter((item): item is Price => item.scope === scope && item.id === id && isEffective(item) &&
+    .filter((item): item is Price => item.scope === scope && item.id === id && !item.reference && isEffective(item) &&
       isPositive(item.amount))
     .sort((a, b) => b.validFrom!.localeCompare(a.validFrom!))[0];
+
+export const displayPrice = (scope: 'typology' | 'parking', id: string) =>
+  publicPrice(scope, id) ?? (data.prices as PriceRecord[]).find((item): item is Price =>
+    item.scope === scope && item.id === id && item.reference === true && isPositive(item.amount) &&
+    (!item.validFrom || item.validFrom <= today) && (!item.validTo || today <= item.validTo));
 
 export function dollars(amount: number) {
   return `US$ ${new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(amount)}`;
 }
 
+export const priceQualifier = (price: Price) => price.from ? 'Desde' : price.approximate ? 'Aprox.' : '';
 export const priceLabel = (price?: Price) => price
-  ? `${price.from ? 'Desde ' : price.approximate ? 'Aprox. ' : ''}${dollars(price.amount)}`
+  ? [priceQualifier(price), dollars(price.amount)].filter(Boolean).join(' ')
   : 'Consultar precio';
 export const priceDetails = (price: Price) => [
   isPositive(price.perM2) ? `${dollars(price.perM2)}/m²` : '',

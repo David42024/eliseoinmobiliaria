@@ -6,15 +6,15 @@ import LotViewer from '../components/LotViewer.astro';
 import QuoteAction from '../components/QuoteAction.astro';
 import { project, salesMessage, typologyPath, wap } from '../data/project';
 import { inventory, demo } from '../data/inventory';
-import { publicPrice, priceLabel } from '../data/commercial';
-const parkingPrice = publicPrice('parking', 'estacionamiento');
+import { displayPrice, priceLabel } from '../data/commercial';
+const parkingPrice = displayPrice('parking', 'estacionamiento');
 ---
 <Site title="Tipologías y visor de lotes | La Nueva Estancia · Elíseo" description="Conoce las tres tipologías de La Nueva Estancia y consulta superficie, precio y disponibilidad de lotes en Víctor Larco." quoteDialog>
   <PageIntro title="Tipologías y visor de lotes" section="Tipologías" description="Explora las opciones de vivienda de La Nueva Estancia y consulta disponibilidad con un asesor." />
   <section class="section wrap">
     <h2 class="sr-only">Tipologías del proyecto</h2>
     <Typologies expanded />
-    {parkingPrice && <p class="parking-price">Estacionamiento · <strong>{priceLabel(parkingPrice)}</strong></p>}
+    {parkingPrice && <p class="parking-price">Estacionamiento · <strong>{priceLabel(parkingPrice)}</strong>{parkingPrice.reference && <small class="price-reference">Precio referencial</small>}</p>}
   </section>
   <section class="section location-home" id="visor"><div class="wrap">
     <div class="section-heading"><div><p class="eyebrow">Plano maestro</p><h2>Visor de lotes</h2></div></div>

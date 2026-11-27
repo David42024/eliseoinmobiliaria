@@ -2,8 +2,8 @@
 import { Building, House, PanelsTopLeft } from './icons';
 import CardMedia from './CardMedia.astro';
 import QuoteAction from './QuoteAction.astro';
-import { project, typologyPath } from '../data/project';
-import { publicPrice, priceDetails, priceLabel } from '../data/commercial';
+import { inquiry, project, typologyPath } from '../data/project';
+import { displayPrice, dollars, priceDetails, priceQualifier } from '../data/commercial';
 import { media, type Picture } from '../data/media';
 const { expanded = false } = Astro.props;
 const icons = { lot: PanelsTopLeft, apartment: Building, house: House };
@@ -19,27 +19,33 @@ const references = {
     const detail = media.typologies[type.id];
     const supplied = detail?.cardImage ?? detail?.renders?.[0];
     const image: Picture = supplied ?? { ...references[type.icon], width: 960, height: 600 };
-    const price = publicPrice('typology', type.id);
+    const price = displayPrice('typology', type.id);
     const commercialDetails = price ? priceDetails(price) : '';
+    const qualifier = price ? priceQualifier(price) : '';
+    const visit = inquiry('contacto', { finalidad: 'visita', tipo: type.id });
     return (
       <article class="type-card" id={expanded ? type.id : undefined}>
         <CardMedia picture={image} reference={!supplied} />
         <div class="type-copy">
           <span class="type-icon"><Icon size={23} stroke-width={1.55} /></span>
           <h3>{type.label}</h3>
+          <p class="type-location">{project.name} · Trujillo</p>
           <p>{type.description}</p>
-          {(detail?.area || 'area' in type) && <p class="type-area">{detail?.area || ('area' in type ? type.area : '')}</p>}
+          <p class="type-area">{detail?.area || type.area}</p>
           {expanded && <p class="property-detail">{detail?.availability || 'Disponibilidad por consultar'}</p>}
           <div class="type-end">
             {price && <div class="type-price">
-              <strong>{priceLabel(price)}</strong>
+              {qualifier && <span class="type-price-qualifier">{qualifier}</span>}
+              <strong>{dollars(price.amount)}</strong>
               {commercialDetails && <small>{commercialDetails}</small>}
+              {price.reference && <small>Precio referencial</small>}
             </div>}
             <div class="type-links">
-              <a class="button outline compact" href={typologyPath(type)}>Ver {type.label.toLocaleLowerCase('es-PE')}</a>
-              <QuoteAction class="button soft compact" type={type.id}>
+              <QuoteAction class="button compact" type={type.id}>
                 {price ? 'Cotizar inmueble' : 'Consultar precio'}<span class="sr-only"> · {type.singular}</span>
               </QuoteAction>
+              <a class="button outline compact" href={`${visit}#contact-whatsapp-title`}>Solicitar visita guiada<span class="sr-only"> · {type.singular}</span></a>
+              <a class="text-link type-detail-link" href={typologyPath(type)}>Ver {type.label.toLocaleLowerCase('es-PE')}</a>
             </div>
           </div>
         </div>
