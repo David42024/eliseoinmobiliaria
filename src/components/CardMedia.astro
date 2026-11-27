@@ -1,0 +1,11 @@
+---
+import type { Picture } from '../data/media';
+
+interface Props { picture: Picture; reference?: boolean }
+const { picture, reference = false } = Astro.props;
+---
+<div class="type-media">
+  <img src={picture.src} srcset={picture.srcset} sizes="(max-width: 760px) 95vw, 33vw"
+    alt={picture.alt} width={picture.width} height={picture.height} loading="lazy" decoding="async" />
+  {reference && <span class="type-caption">Imagen referencial</span>}
+</div>

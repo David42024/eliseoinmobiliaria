@@ -1,8 +1,9 @@
 ---
 import { Building, House, PanelsTopLeft } from './icons';
+import CardMedia from './CardMedia.astro';
 import QuoteAction from './QuoteAction.astro';
 import { project, typologyPath } from '../data/project';
-import { publicPrice, priceLabel } from '../data/commercial';
+import { publicPrice, priceDetails, priceLabel } from '../data/commercial';
 import { media, type Picture } from '../data/media';
 const { expanded = false } = Astro.props;
 const icons = { lot: PanelsTopLeft, apartment: Building, house: House };
@@ -19,13 +20,10 @@ const references = {
     const supplied = detail?.cardImage ?? detail?.renders?.[0];
     const image: Picture = supplied ?? { ...references[type.icon], width: 960, height: 600 };
     const price = publicPrice('typology', type.id);
+    const commercialDetails = price ? priceDetails(price) : '';
     return (
       <article class="type-card" id={expanded ? type.id : undefined}>
-        <div class="type-media">
-          <img src={image.src} srcset={image.srcset} sizes="(max-width: 760px) 95vw, 33vw"
-            alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" />
-          {!supplied && <span class="type-caption">Imagen referencial</span>}
-        </div>
+        <CardMedia picture={image} reference={!supplied} />
         <div class="type-copy">
           <span class="type-icon"><Icon size={23} stroke-width={1.55} /></span>
           <h3>{type.label}</h3>
@@ -33,11 +31,14 @@ const references = {
           {(detail?.area || 'area' in type) && <p class="type-area">{detail?.area || ('area' in type ? type.area : '')}</p>}
           {expanded && <p class="property-detail">{detail?.availability || 'Disponibilidad por consultar'}</p>}
           <div class="type-end">
-            {price && <strong>{priceLabel(price)}</strong>}
+            {price && <div class="type-price">
+              <strong>{priceLabel(price)}</strong>
+              {commercialDetails && <small>{commercialDetails}</small>}
+            </div>}
             <div class="type-links">
               <a class="button outline compact" href={typologyPath(type)}>Ver {type.label.toLocaleLowerCase('es-PE')}</a>
               <QuoteAction class="button soft compact" type={type.id}>
-                {price ? 'Cotizar' : 'Consultar precio'}<span class="sr-only"> · {type.singular}</span>
+                {price ? 'Cotizar inmueble' : 'Consultar precio'}<span class="sr-only"> · {type.singular}</span>
               </QuoteAction>
             </div>
           </div>

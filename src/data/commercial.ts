@@ -1,26 +1,47 @@
 import data from '../../content/prices.json';
 
 type Approval = { approved: boolean; validFrom: string | null; validTo?: string };
-export type Price = Approval & { scope: string; id: string; amount: number; from?: boolean };
+export type Price = Approval & {
+  scope: string;
+  id: string;
+  amount: number;
+  from?: boolean;
+  approximate?: boolean;
+  perM2?: number;
+  stage?: string;
+};
 type PriceRecord = Omit<Price, 'amount'> & { amount: number | null };
+type StageRecord = Approval & { name: string; lotPerM2: number; apartmentPerM2: number };
+type AdjustmentRecord = Approval & { location: string; percent: number };
 const today = new Intl.DateTimeFormat('sv-SE', { timeZone: 'America/Lima' }).format(new Date());
 const isEffective = (record: Approval) =>
   record.approved && !!record.validFrom && /^\d{4}-\d{2}-\d{2}$/.test(record.validFrom) &&
   record.validFrom <= today && (!record.validTo || today <= record.validTo);
+const isPositive = (value: unknown): value is number =>
+  typeof value === 'number' && Number.isFinite(value) && value > 0;
 
 export const publicPrice = (scope: string, id: string) =>
   (data.prices as PriceRecord[])
     .filter((item): item is Price => item.scope === scope && item.id === id && isEffective(item) &&
-      typeof item.amount === 'number' && Number.isFinite(item.amount) && item.amount > 0)
+      isPositive(item.amount))
     .sort((a, b) => b.validFrom!.localeCompare(a.validFrom!))[0];
 
 export function dollars(amount: number) {
-  return `US$ ${new Intl.NumberFormat('de-DE', { minimumGroupingDigits: 1, maximumFractionDigits: 2 } as Intl.NumberFormatOptions).format(amount)}`;
+  return `US$ ${new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(amount)}`;
 }
 
 export const priceLabel = (price?: Price) => price
-  ? `${price.from ? 'Desde ' : ''}${dollars(price.amount)}`
+  ? `${price.from ? 'Desde ' : price.approximate ? 'Aprox. ' : ''}${dollars(price.amount)}`
   : 'Consultar precio';
+export const priceDetails = (price: Price) => [
+  isPositive(price.perM2) ? `${dollars(price.perM2)}/m²` : '',
+  price.stage?.trim() || '',
+].filter(Boolean).join(' · ');
+
+export const publicStages = ((data.proposedRates ?? []) as StageRecord[]).filter(record =>
+  isEffective(record) && record.name.trim() && isPositive(record.lotPerM2) && isPositive(record.apartmentPerM2));
+export const publicAdjustments = ((data.proposedAdjustments ?? []) as AdjustmentRecord[]).filter(record =>
+  isEffective(record) && record.location.trim() && isPositive(record.percent));
 
 const initial: Approval & { percent: number | null } = data.initial;
 export const financing = {

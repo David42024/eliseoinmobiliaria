@@ -1,5 +1,6 @@
 ---
 import { ChevronRight, GraduationCap, Route, Trees } from '../components/icons';
+import CardMedia from '../components/CardMedia.astro';
 import Site from '../layouts/Site.astro';
 import PageIntro from '../components/PageIntro.astro';
 import QuoteAction from '../components/QuoteAction.astro';
@@ -9,6 +10,11 @@ import { project, spacePath, typologyPath } from '../data/project';
 import { media } from '../data/media';
 const totalHomes = String(project.totals.homes).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 const icons = { trees: Trees, education: GraduationCap, route: Route };
+const spaceAlt = {
+  trees: 'Sendero arbolado y bancas en un parque vecinal',
+  education: 'Pabellón comunitario con una zona al aire libre para actividades',
+  route: 'Calle residencial pavimentada con veredas y cruce peatonal',
+};
 ---
 <Site title="El proyecto | La Nueva Estancia · Elíseo" description="Conoce la propuesta de habilitación urbana de La Nueva Estancia en Víctor Larco, sus cifras, espacios proyectados y fecha de entrega anunciada." quoteDialog>
   <PageIntro title="La Nueva Estancia" section="Proyecto" description="Una habilitación urbana residencial frente a la Av. Huamán, en el distrito de Víctor Larco, Trujillo." />
@@ -35,8 +41,11 @@ const icons = { trees: Trees, education: GraduationCap, route: Route };
     <div class="type-grid">
       {project.spaces.map(space => {
         const Icon = icons[space.icon];
+        const supplied = media.spaces?.[space.slug]?.[0];
+        const image = supplied ?? { src: `/espacios/${space.slug}.webp`, alt: spaceAlt[space.icon], width: 960, height: 600 };
         return (
           <article class="type-card">
+            <CardMedia picture={image} reference={!supplied} />
             <div class="type-copy">
               <span class="type-icon"><Icon size={25} aria-hidden="true" /></span>
               <h3>{space.label}</h3>

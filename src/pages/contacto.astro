@@ -7,9 +7,9 @@ import { contact, project } from '../data/project';
 ---
 <Site title="Contacto y visitas | La Nueva Estancia · Elíseo" description="Solicita una visita a La Nueva Estancia o conversa con Elíseo por WhatsApp. Consulta la dirección y el horario de la oficina de ventas.">
   <PageIntro title="Contacto y visitas" section="Contacto" description="Comunícate con el equipo de ventas de La Nueva Estancia en Víctor Larco." />
-  <section class="section wrap contact-layout">
+  <section class="section wrap commercial-layout">
     <LeadForm />
-    <section class="office-panel" aria-labelledby="office-title">
+    <section class="commercial-panel" aria-labelledby="office-title">
       <h2 id="office-title">Oficina de ventas</h2>
       <dl class="office-details">
         <div>
@@ -33,14 +33,10 @@ import { contact, project } from '../data/project';
 </Site>
 
 <style>
-  .contact-layout { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); align-items: start; gap: clamp(1.25rem, 3.5vw, 3rem); }
-  .office-panel { min-width: 0; padding: clamp(1.25rem, 3.6vw, 2.6rem); border: 1px solid #cbd5c5; border-radius: 12px; background: var(--soft); }
-  .office-panel h2 { font-size: clamp(1.75rem, 3.25vw, 2.75rem); }
   .office-details { margin: 1rem 0 1.15rem; }
   .office-details > div { padding: .72rem 0; border-bottom: 1px solid #cbd5c5; }
   .office-details dt { display: flex; align-items: center; gap: .55rem; font-weight: 700; }
   .office-details svg { color: var(--leaf); }
   .office-details dd { margin: .18rem 0 0 calc(20px + .55rem); color: var(--ink-muted); overflow-wrap: anywhere; }
   .office-details a { text-decoration-thickness: 1px; text-underline-offset: .22em; }
-  @media (max-width: 760px) { .contact-layout { grid-template-columns: minmax(0, 1fr); } }
 </style>

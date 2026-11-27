@@ -83,6 +83,8 @@ Para adoptar un panel o CMS, conserva el esquema y los IDs. Define quién aprueb
 
 Usa `templates/precios.json` para agregar registros a `prices`. Los ámbitos son `project`, `typology`, `lot` y `parking`. El precio final de un lote se vincula a su `id` y se publica en dólares. Marca `approved: true` y asigna `validFrom` en formato AAAA-MM-DD. `validTo` es opcional e incluye el último día. Si coinciden registros vigentes, se usa el de fecha inicial más reciente. Los precios exactos permiten simular inicial y saldo cuando la tasa de inicial esté aprobada. Los precios «Desde» son informativos.
 
+En las fichas, `perM2` y `stage` muestran el precio por metro cuadrado y el tramo del importe aprobado. Usa `approximate: true` para importes aproximados. En Financiamiento, los registros vigentes de `proposedRates` y `proposedAdjustments` aparecen tras su aprobación y fecha de vigencia. El ejemplo de cada tramo multiplica el precio de lote por 162 m².
+
 Los tramos, cupos y ajustes comerciales propuestos se conservan en `content/prices.local.json` para revisión interna. Este archivo queda fuera de Git y sirve como referencia para incorporar los valores aprobados en `content/prices.json`, que es la configuración que usa el sitio. Para hacer vigente un precio por lote, escribe su importe final aprobado en `prices`. Si un lote reúne varias condiciones de ubicación, confirma la regla con Elíseo antes de fijar ese importe. El sitio no acumula recargos ni calcula precios a partir de propuestas.
 
 Arquitectura debe confirmar las superficies referenciales de 125 m² para el departamento y 162 m² de lote para la casa en conjunto. Registra las superficies y distribuciones confirmadas en `typologies` dentro de `content/media.json`.
@@ -94,6 +96,8 @@ Habilita cada modalidad con su descripción aprobada. Para activar cuotas regist
 Usa `templates/medios.json` y `templates/avance.json`. Usa variantes AVIF o WebP con atributos `width`, `height`, `alt`, `srcset` y `full` cuando corresponda. Guarda medios livianos en `public/medios/` y considera un CDN para recorridos, modelos y videos pesados. Sirve los modelos, panoramas y videos 360° externos con CORS para el dominio de Elíseo. Publica hitos con fecha ISO, descripción, fotos o video y `approved: true`.
 
 En `content/media.json`, usa `cover` para la foto de portada, `gallery` para la galería general, `typologies.<id>.renders` y `typologies.<id>.floorPlan` para cada ficha y `spaces.<slug>` para las fotos de un espacio. Cada galería admite varias imágenes y destaca la primera. Al tocar una imagen se abre su versión ampliada.
+
+Las tarjetas de espacios muestran la primera imagen de `spaces.<slug>` cuando está disponible. La tarjeta identifica como referencial la ilustración que se muestra mientras se carga material oficial.
 
 Para cambiar la imagen referencial de una tarjeta, define `typologies.<id>.cardImage` con el mismo formato que `cover`. Si la ficha tiene renders, la tarjeta puede usar el primero como imagen principal.
 

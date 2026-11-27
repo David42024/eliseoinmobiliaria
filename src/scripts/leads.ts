@@ -2,7 +2,7 @@ import { track, attribution } from './analytics';
 import { demoLotMessage, salesMessage, wap } from '../data/project';
 
 type Lot = { id: string; type: string; demo: boolean; amount?: number };
-type Type = { id: string; label: string; amount?: number; from?: boolean };
+type Type = { id: string; label: string; amount?: number; from?: boolean; approximate?: boolean };
 
 export function setupLead(root: HTMLElement) {
   const mode = root.dataset.mode;
@@ -24,7 +24,7 @@ export function setupLead(root: HTMLElement) {
   let purpose = mode === 'quote' ? 'cotizacion' : params.get('finalidad') === 'visita' ? 'visita' : 'informacion';
   if (typeInput && type) typeInput.value = type.id;
   if (purposeInput) purposeInput.value = purpose;
-  const money = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 });
+  const money = new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 });
   const format = (amount: number) => `US$ ${money.format(amount)}`;
   let requestId: string | undefined;
   let submittedBody = '';
@@ -40,10 +40,11 @@ export function setupLead(root: HTMLElement) {
     const amount = lot ? lot.amount : type?.amount;
     simulator.hidden = mode !== 'quote' || !type;
     quotePrice.hidden = !amount;
-    quotePrice.textContent = amount ? `${!lot && type?.from ? 'Desde ' : ''}${format(amount)}` : '';
+    const pricePrefix = !lot ? (type?.from ? 'Desde ' : type?.approximate ? 'Aprox. ' : '') : '';
+    quotePrice.textContent = amount ? `${pricePrefix}${format(amount)}` : '';
     quoteInquiry.hidden = !!amount;
     const initialPercent = Number(root.dataset.initial);
-    const showInitial = !!amount && !!root.dataset.initial && (!type?.from || !!lot);
+    const showInitial = !!amount && !!root.dataset.initial && !pricePrefix;
     root.querySelectorAll<HTMLElement>('[data-initial-row]').forEach(element => { element.hidden = !showInitial; });
     const initial = showInitial ? Math.round(amount * initialPercent) / 100 : 0;
     const balance = showInitial ? amount - initial : 0;
