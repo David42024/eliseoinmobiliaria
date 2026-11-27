@@ -1,7 +1,43 @@
 {
   "cover": null,
   "gallery": [],
-  "tour": null,
+  "tour": {
+    "kind": "panorama",
+    "title": "Recorrido 360° de La Nueva Estancia",
+    "reference": true,
+    "poster": {
+      "src": "/espacios/parques-y-areas-verdes.webp",
+      "width": 960,
+      "height": 600,
+      "alt": ""
+    },
+    "scenes": [
+      {
+        "id": "parque",
+        "title": "Parque y áreas verdes",
+        "group": "Vistas peatonales",
+        "src": "/panoramas/parque-360.webp",
+        "yaw": -76,
+        "pitch": -4
+      },
+      {
+        "id": "paseo",
+        "title": "Calle residencial",
+        "group": "Vistas peatonales",
+        "src": "/panoramas/paseo-360.webp",
+        "yaw": -90,
+        "pitch": -4
+      },
+      {
+        "id": "plaza",
+        "title": "Plaza de recreación",
+        "group": "Vistas peatonales",
+        "src": "/panoramas/plaza-360.webp",
+        "yaw": 0,
+        "pitch": -2
+      }
+    ]
+  },
   "model": null,
   "typologies": {},
   "spaces": {},

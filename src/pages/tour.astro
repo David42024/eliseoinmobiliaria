@@ -9,7 +9,17 @@ import { media } from '../data/media';
 <Site title="Tour virtual 360° | La Nueva Estancia · Elíseo" description="Encuentra el recorrido virtual de La Nueva Estancia y explora las tipologías y actualizaciones del proyecto.">
   <PageIntro title="Tour virtual 360°" section="Tour 360°" description="Conoce La Nueva Estancia y su propuesta urbana desde distintos puntos de vista." />
   <section class="section wrap">
-    {media.tour ? <TourPlayer tour={media.tour} tracking /> : (
+    {media.tour ? (
+      <>
+        {media.tour.reference && <div class="section-heading">
+          <div>
+            <h2>Recorrido referencial</h2>
+            <p>Las escenas ilustran los espacios proyectados y se generaron con IA.</p>
+          </div>
+        </div>}
+        <TourPlayer tour={media.tour} tracking />
+      </>
+    ) : (
       <div class="empty-panel tour-empty">
         <span class="type-icon"><ScanLine size={30} /></span>
         <h2>Recorrido virtual en preparación</h2>

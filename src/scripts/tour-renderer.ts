@@ -88,10 +88,20 @@ export async function renderInteractiveTour(stage: HTMLElement, tour: Tour, stat
       pitch = THREE.MathUtils.clamp(pitch + y, -85, 85);
       render();
     };
-    canvas.addEventListener('pointerdown', event => canvas.setPointerCapture(event.pointerId));
-    canvas.addEventListener('pointermove', event => {
-      if (canvas.hasPointerCapture(event.pointerId)) turn(-event.movementX * .24, event.movementY * .24);
+    let drag: { id: number; x: number; y: number } | undefined;
+    canvas.addEventListener('pointerdown', event => {
+      if (drag || event.button !== 0) return;
+      drag = { id: event.pointerId, x: event.clientX, y: event.clientY };
+      canvas.setPointerCapture(event.pointerId);
     });
+    canvas.addEventListener('pointermove', event => {
+      if (drag?.id !== event.pointerId) return;
+      const { clientX, clientY } = event;
+      turn((drag.x - clientX) * .24, (clientY - drag.y) * .24);
+      drag.x = clientX;
+      drag.y = clientY;
+    });
+    canvas.addEventListener('lostpointercapture', event => { if (drag?.id === event.pointerId) drag = undefined; });
     canvas.addEventListener('keydown', event => {
       const delta = { ArrowLeft: [-7, 0], ArrowRight: [7, 0], ArrowUp: [0, 7], ArrowDown: [0, -7] }[event.key];
       if (!delta) return;
@@ -139,15 +149,45 @@ export async function renderInteractiveTour(stage: HTMLElement, tour: Tour, stat
 
     if (tour.kind !== 'panorama' || !tour.scenes.length) throw new Error('Sin escenas.');
     const scenes = tour.scenes;
+    const toolbar = document.createElement('div');
+    toolbar.className = 'tour-toolbar';
+    const label = document.createElement('label');
+    label.textContent = 'Escena del recorrido';
     const menu = document.createElement('select');
-    menu.setAttribute('aria-label', 'Escenas del recorrido');
     for (const group of new Set(scenes.map(item => item.group))) {
       const options = document.createElement('optgroup');
       options.label = group;
       for (const item of scenes.filter(item => item.group === group)) options.append(new Option(item.title, item.id));
       menu.append(options);
     }
-    stage.prepend(menu);
+    label.append(menu);
+    toolbar.append(label);
+    const controls = document.createElement('div');
+    controls.className = 'tour-view-controls';
+    controls.setAttribute('role', 'group');
+    controls.setAttribute('aria-label', 'Controles de la vista');
+    let startYaw = 0;
+    let startPitch = 0;
+    const resetView = () => { yaw = startYaw; pitch = startPitch; render(); };
+    for (const control of [
+      { text: '←', label: 'Girar a la izquierda', activate: () => turn(-25, 0) },
+      { text: 'Centrar vista', label: 'Centrar vista', activate: resetView },
+      { text: '→', label: 'Girar a la derecha', activate: () => turn(25, 0) },
+    ]) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'button compact outline';
+      button.textContent = control.text;
+      button.setAttribute('aria-label', control.label);
+      button.addEventListener('click', control.activate);
+      controls.append(button);
+    }
+    toolbar.append(controls);
+    stage.prepend(toolbar);
+    const hint = document.createElement('p');
+    hint.className = 'tour-hint';
+    hint.textContent = 'Arrastra la imagen para mirar alrededor o usa las flechas con el visor enfocado.';
+    stage.append(hint);
     let requested = 0;
     async function show(item: Scene) {
       const request = ++requested;
@@ -158,6 +198,7 @@ export async function renderInteractiveTour(stage: HTMLElement, tour: Tour, stat
         const texture = await new THREE.TextureLoader().loadAsync(item.src);
         if (request !== requested) { texture.dispose(); return; }
         texture.colorSpace = THREE.SRGBColorSpace;
+        texture.wrapS = THREE.RepeatWrapping;
         material.map?.dispose();
         material.map = texture;
         material.needsUpdate = true;
@@ -172,8 +213,9 @@ export async function renderInteractiveTour(stage: HTMLElement, tour: Tour, stat
           viewport.append(button);
           return [{ button, position: direction(hotspot.yaw, hotspot.pitch).multiplyScalar(10) }];
         });
-        yaw = pitch = 0;
-        render();
+        startYaw = item.yaw ?? 0;
+        startPitch = THREE.MathUtils.clamp(item.pitch ?? 0, -85, 85);
+        resetView();
         status.textContent = '';
       } catch (error) {
         if (request === requested) status.textContent = 'La escena no pudo cargar. Selecciona otra vista o abre la imagen panorámica.';

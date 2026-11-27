@@ -13,12 +13,15 @@ export type Scene = {
   title: string;
   group: string;
   src: string;
+  yaw?: number;
+  pitch?: number;
   hotspots?: { label: string; target: string; yaw: number; pitch: number }[];
 };
 export type Tour = {
   title: string;
   poster?: Picture;
   embed?: boolean;
+  reference?: boolean;
 } & (
   { kind: 'iframe' | 'video' | 'video360' | 'model'; src: string }
   | { kind: 'panorama'; scenes: Scene[] }

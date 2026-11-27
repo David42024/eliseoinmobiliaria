@@ -54,6 +54,10 @@ export function setupTour(root: HTMLElement) {
         }
         const { renderInteractiveTour } = await import('./tour-renderer');
         await renderInteractiveTour(stage, tour, status, panorama);
+        if (tour.kind === 'panorama') {
+          stage.scrollIntoView({ block: 'start' });
+          stage.querySelector('select')?.focus({ preventScroll: true });
+        }
       }
     } catch { fail(); }
   });
