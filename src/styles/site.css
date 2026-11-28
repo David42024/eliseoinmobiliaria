@@ -306,7 +306,27 @@ input:not([type=checkbox]), select { width: 100%; min-height: 44px; color: var(-
 .tour-view-controls { display: flex; flex-wrap: wrap; gap: .4rem; }
 .tour-view-controls button { min-width: 44px; }
 .tour-hint { padding: .55rem .85rem; font-size: .875rem; }
-.tour-hotspot { position: absolute; transform: translate(-50%, -50%); }
+.tour-hotspot {
+  position: absolute; transform: translate(-50%, -50%);
+  width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%;
+  background: transparent; cursor: pointer;
+}
+.tour-hotspot::before {
+  content: ''; position: absolute; inset: 8px;
+  border: 3px solid #fff; border-radius: 50%; background: #1a271e33;
+  box-shadow: 0 1px 6px #0009, inset 0 1px 4px #0005;
+  transition: background-color .18s, transform .18s;
+}
+.tour-hotspot span {
+  position: absolute; left: 50%; bottom: 100%; transform: translateX(-50%);
+  padding: .3rem .6rem; border-radius: 5px; background: #19251eee; color: #fff;
+  font-size: .8rem; font-weight: 600; white-space: nowrap; opacity: 0; pointer-events: none;
+}
+.tour-hotspot:hover, .tour-hotspot:focus-visible { z-index: 1; }
+.tour-hotspot:hover::before, .tour-hotspot:focus-visible::before { transform: scale(1.15); background: #294539cc; }
+.tour-hotspot:hover span, .tour-hotspot:focus-visible span { opacity: 1; }
+.tour-hotspot:focus-visible { outline: 2px solid #fff; outline-offset: -3px; }
+#departamento { scroll-margin-top: 5rem; }
 .tour-status:empty { display: none; }
 .tour-player > a { margin-top: .75rem; }
 

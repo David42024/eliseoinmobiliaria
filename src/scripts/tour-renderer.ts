@@ -73,9 +73,13 @@ export async function renderInteractiveTour(stage: HTMLElement, tour: Tour, stat
       camera.lookAt(direction(yaw, pitch));
       renderer.render(scene, camera);
       const look = direction(yaw, pitch);
+      const horizontalLimit = 1 - 44 / viewport.clientWidth;
+      const verticalLimit = 1 - 44 / viewport.clientHeight;
       for (const { button, position } of hotspots) {
         const projected = position.clone().project(camera);
-        button.hidden = position.dot(look) <= 0 || Math.abs(projected.x) > .94 || Math.abs(projected.y) > .88;
+        button.hidden = position.dot(look) <= 0
+          || Math.abs(projected.x) > horizontalLimit
+          || Math.abs(projected.y) > verticalLimit;
         button.style.left = `${(projected.x + 1) * 50}%`;
         button.style.top = `${(1 - projected.y) * 50}%`;
       }
@@ -186,7 +190,9 @@ export async function renderInteractiveTour(stage: HTMLElement, tour: Tour, stat
     stage.prepend(toolbar);
     const hint = document.createElement('p');
     hint.className = 'tour-hint';
-    hint.textContent = 'Arrastra la imagen para mirar alrededor o usa las flechas con el visor enfocado.';
+    hint.textContent = scenes.some(item => item.hotspots?.length)
+      ? 'Arrastra para mirar alrededor y toca los círculos blancos para cambiar de ambiente. También puedes elegir una escena en el menú.'
+      : 'Arrastra la imagen para mirar alrededor o usa las flechas con el visor enfocado.';
     stage.append(hint);
     let requested = 0;
     async function show(item: Scene) {
@@ -202,13 +208,19 @@ export async function renderInteractiveTour(stage: HTMLElement, tour: Tour, stat
         material.map?.dispose();
         material.map = texture;
         material.needsUpdate = true;
+        const hotspotHadFocus = hotspots.some(({ button }) => button === document.activeElement);
         hotspots.forEach(({ button }) => button.remove());
         hotspots = (item.hotspots || []).flatMap(hotspot => {
           const target = scenes.find(candidate => candidate.id === hotspot.target);
           if (!target) return [];
           const button = document.createElement('button');
-          button.className = 'button light tour-hotspot';
-          button.textContent = hotspot.label;
+          button.type = 'button';
+          button.className = 'tour-hotspot';
+          button.setAttribute('aria-label', hotspot.label);
+          const caption = document.createElement('span');
+          caption.textContent = hotspot.label;
+          caption.setAttribute('aria-hidden', 'true');
+          button.append(caption);
           button.addEventListener('click', () => { void show(target).catch(() => {}); });
           viewport.append(button);
           return [{ button, position: direction(hotspot.yaw, hotspot.pitch).multiplyScalar(10) }];
@@ -216,6 +228,7 @@ export async function renderInteractiveTour(stage: HTMLElement, tour: Tour, stat
         startYaw = item.yaw ?? 0;
         startPitch = THREE.MathUtils.clamp(item.pitch ?? 0, -85, 85);
         resetView();
+        if (hotspotHadFocus) canvas.focus({ preventScroll: true });
         status.textContent = '';
       } catch (error) {
         if (request === requested) status.textContent = 'La escena no pudo cargar. Selecciona otra vista o abre la imagen panorámica.';

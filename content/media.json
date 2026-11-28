@@ -3,7 +3,231 @@
   "gallery": [],
   "tour": {
     "kind": "panorama",
-    "title": "Recorrido 360° de La Nueva Estancia",
+    "title": "Recorrido 360° del departamento",
+    "poster": {
+      "src": "/medios/departamento/sala.webp",
+      "alt": "",
+      "width": 1120,
+      "height": 630
+    },
+    "scenes": [
+      {
+        "id": "sala",
+        "title": "Sala",
+        "group": "Ambientes del departamento",
+        "src": "/panoramas/departamento/sala.webp",
+        "yaw": -45,
+        "pitch": -13,
+        "hotspots": [
+          {
+            "target": "comedor",
+            "label": "Ir a Comedor",
+            "yaw": -68,
+            "pitch": -23
+          },
+          {
+            "target": "dormitorio-01",
+            "label": "Ir a Dormitorio 01",
+            "yaw": -45,
+            "pitch": -5
+          }
+        ]
+      },
+      {
+        "id": "comedor",
+        "title": "Comedor",
+        "group": "Ambientes del departamento",
+        "src": "/panoramas/departamento/comedor.webp",
+        "yaw": -58,
+        "pitch": -15,
+        "hotspots": [
+          {
+            "target": "sala",
+            "label": "Ir a Sala",
+            "yaw": -92,
+            "pitch": -20
+          },
+          {
+            "target": "cocina",
+            "label": "Ir a Cocina",
+            "yaw": -25,
+            "pitch": -13
+          },
+          {
+            "target": "bano-01",
+            "label": "Ir a Baño 01",
+            "yaw": -63,
+            "pitch": -6
+          }
+        ]
+      },
+      {
+        "id": "cocina",
+        "title": "Cocina",
+        "group": "Ambientes del departamento",
+        "src": "/panoramas/departamento/cocina.webp",
+        "yaw": -9,
+        "pitch": -13,
+        "hotspots": [
+          {
+            "target": "comedor",
+            "label": "Ir a Comedor",
+            "yaw": -74,
+            "pitch": -20
+          },
+          {
+            "target": "sala",
+            "label": "Ir a Sala",
+            "yaw": -41,
+            "pitch": -15
+          }
+        ]
+      },
+      {
+        "id": "dormitorio-01",
+        "title": "Dormitorio 01",
+        "group": "Ambientes del departamento",
+        "src": "/panoramas/departamento/dormitorio-01.webp",
+        "yaw": -56,
+        "pitch": -22,
+        "hotspots": [
+          {
+            "target": "comedor",
+            "label": "Ir a Comedor",
+            "yaw": -158,
+            "pitch": -18
+          },
+          {
+            "target": "dormitorio-02",
+            "label": "Ir a Dormitorio 02",
+            "yaw": -14,
+            "pitch": -17
+          }
+        ]
+      },
+      {
+        "id": "dormitorio-02",
+        "title": "Dormitorio 02",
+        "group": "Ambientes del departamento",
+        "src": "/panoramas/departamento/dormitorio-02.webp",
+        "yaw": -170,
+        "pitch": -23,
+        "hotspots": [
+          {
+            "target": "comedor",
+            "label": "Ir a Comedor",
+            "yaw": -79,
+            "pitch": -18
+          },
+          {
+            "target": "dormitorio-01",
+            "label": "Ir a Dormitorio 01",
+            "yaw": -202,
+            "pitch": -17
+          }
+        ]
+      },
+      {
+        "id": "bano-01",
+        "title": "Baño 01",
+        "group": "Ambientes del departamento",
+        "src": "/panoramas/departamento/bano-01.webp",
+        "yaw": -170,
+        "pitch": -21,
+        "hotspots": [
+          {
+            "target": "comedor",
+            "label": "Ir a Comedor",
+            "yaw": -235,
+            "pitch": -19
+          },
+          {
+            "target": "bano-02",
+            "label": "Ir a Baño 02",
+            "yaw": -147,
+            "pitch": -15
+          }
+        ]
+      },
+      {
+        "id": "bano-02",
+        "title": "Baño 02",
+        "group": "Ambientes del departamento",
+        "src": "/panoramas/departamento/bano-02.webp",
+        "yaw": -30,
+        "pitch": -21,
+        "hotspots": [
+          {
+            "target": "comedor",
+            "label": "Ir a Comedor",
+            "yaw": 38,
+            "pitch": -18
+          },
+          {
+            "target": "bano-01",
+            "label": "Ir a Baño 01",
+            "yaw": -60,
+            "pitch": -15
+          }
+        ]
+      }
+    ]
+  },
+  "model": null,
+  "typologies": {
+    "departamento-multifamiliar": {
+      "tourHref": "/tour/#departamento",
+      "renders": [
+        {
+          "src": "/medios/departamento/sala.webp",
+          "alt": "Sala del departamento de La Nueva Estancia",
+          "width": 1120,
+          "height": 630
+        },
+        {
+          "src": "/medios/departamento/comedor.webp",
+          "alt": "Comedor del departamento de La Nueva Estancia",
+          "width": 1120,
+          "height": 630
+        },
+        {
+          "src": "/medios/departamento/cocina.webp",
+          "alt": "Cocina del departamento de La Nueva Estancia",
+          "width": 1120,
+          "height": 630
+        },
+        {
+          "src": "/medios/departamento/dormitorio-01.webp",
+          "alt": "Dormitorio 01 del departamento de La Nueva Estancia",
+          "width": 1120,
+          "height": 630
+        },
+        {
+          "src": "/medios/departamento/dormitorio-02.webp",
+          "alt": "Dormitorio 02 del departamento de La Nueva Estancia",
+          "width": 1120,
+          "height": 630
+        },
+        {
+          "src": "/medios/departamento/bano-01.webp",
+          "alt": "Baño 01 del departamento de La Nueva Estancia",
+          "width": 1120,
+          "height": 630
+        },
+        {
+          "src": "/medios/departamento/bano-02.webp",
+          "alt": "Baño 02 del departamento de La Nueva Estancia",
+          "width": 1120,
+          "height": 630
+        }
+      ]
+    }
+  },
+  "spaces": {},
+  "progress": [],
+  "exteriorTour": {
+    "kind": "panorama",
+    "title": "Recorrido 360° de exteriores referenciales",
     "reference": true,
     "poster": {
       "src": "/espacios/parques-y-areas-verdes.webp",
@@ -37,9 +261,5 @@
         "pitch": -2
       }
     ]
-  },
-  "model": null,
-  "typologies": {},
-  "spaces": {},
-  "progress": []
+  }
 }

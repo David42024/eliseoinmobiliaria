@@ -26,13 +26,23 @@ export type Tour = {
   { kind: 'iframe' | 'video' | 'video360' | 'model'; src: string }
   | { kind: 'panorama'; scenes: Scene[] }
 );
-type PropertyMedia = { area?: string; bedrooms?: number; bathrooms?: number; cardImage?: Picture; floorPlan?: Picture; renders?: Picture[]; availability?: string };
+type PropertyMedia = {
+  area?: string;
+  bedrooms?: number;
+  bathrooms?: number;
+  cardImage?: Picture;
+  floorPlan?: Picture;
+  renders?: Picture[];
+  tourHref?: string;
+  availability?: string;
+};
 type Progress = { date: string; title: string; summary: string; photos?: Picture[]; video?: Tour; approved: boolean };
 
 export const media = settings as {
   cover: Picture | null;
   gallery: Picture[];
   tour: Tour | null;
+  exteriorTour?: Tour | null;
   model: Tour | null;
   typologies: Record<string, PropertyMedia>;
   spaces?: Record<string, Picture[]>;
