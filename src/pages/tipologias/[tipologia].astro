@@ -1,6 +1,6 @@
 ---
 import type { InferGetStaticPropsType } from 'astro';
-import { Building, House, PanelsTopLeft } from '../../components/icons';
+import { Building, ChevronRight, House, PanelsTopLeft, ScanLine } from '../../components/icons';
 import Gallery from '../../components/Gallery.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import QuoteAction from '../../components/QuoteAction.astro';
@@ -29,7 +29,6 @@ const Icon = { lot: PanelsTopLeft, apartment: Building, house: House }[type.icon
       <p>{type.detail}</p>
       <div class="button-row">
         <QuoteAction type={type.id}>Solicitar cotización</QuoteAction>
-        {details?.tourHref && <a class="button outline" href={details.tourHref}>Recorrer el departamento en 360°</a>}
         {type.icon === 'lot'
           ? <a class="text-link" href="/tipologias/#visor">Abrir el visor de lotes</a>
           : <a class="text-link" href="/ubicacion/">Ver ubicación del proyecto</a>}
@@ -50,6 +49,13 @@ const Icon = { lot: PanelsTopLeft, apartment: Building, house: House }[type.icon
     </aside>
     <section class="detail-gallery">
       <h2>{details?.tourHref ? 'Ambientes del departamento' : 'Imágenes de la tipología'}</h2>
+      {details?.tourHref && (
+        <a class="button detail-tour-link" href={details.tourHref}>
+          <ScanLine size={26} aria-hidden="true" />
+          <span>Recorrer el departamento en 360°</span>
+          <ChevronRight size={20} aria-hidden="true" />
+        </a>
+      )}
       <Gallery pictures={pictures} featured empty="Los renders y planos se mostrarán aquí cuando estén disponibles." />
     </section>
   </section>
