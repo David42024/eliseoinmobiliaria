@@ -5,9 +5,10 @@ import PageIntro from '../components/PageIntro.astro';
 import TourPlayer from '../components/TourPlayer.astro';
 import Gallery from '../components/Gallery.astro';
 import { media } from '../data/media';
+const parkPictures = media.spaces?.['parques-y-areas-verdes'] ?? [];
 ---
-<Site title="Tour virtual 360° | La Nueva Estancia · Elíseo" description="Recorre la sala, el comedor, la cocina, los dormitorios y los baños de un departamento de La Nueva Estancia en 360°.">
-  <PageIntro title="Tour virtual 360°" section="Tour 360°" description="Explora los interiores de un departamento de La Nueva Estancia." />
+<Site title="Tour virtual 360° | La Nueva Estancia · Elíseo" description="Explora el interior de un departamento de La Nueva Estancia y las vistas del entorno proyectado.">
+  <PageIntro title="Tour virtual 360°" section="Tour 360°" description="Recorre un departamento y explora los exteriores de La Nueva Estancia." />
   <section class="section wrap" id="departamento">
     {media.tour ? (
       <>
@@ -16,7 +17,10 @@ import { media } from '../data/media';
             <h2>Recorrido del departamento</h2>
             <p>Sala, comedor, cocina y vistas de dormitorios y baños.</p>
           </div>
-          <a class="text-link" href="/tipologias/departamentos/">Ver ficha del departamento</a>
+          <div class="button-row">
+            <a class="text-link" href="/tipologias/departamentos/">Ver ficha del departamento</a>
+            {media.exteriorTour && <a class="text-link" href="#exteriores">Ver exteriores</a>}
+          </div>
         </div>
         <TourPlayer tour={media.tour} tracking />
       </>
@@ -27,6 +31,24 @@ import { media } from '../data/media';
         <p>Mientras se prepara el recorrido, puedes consultar las tipologías y conocer las novedades del proyecto.</p>
         <div class="button-row"><a class="button" href="/tipologias/#visor">Explorar lotes</a><a class="text-link" href="/avance/">Ver avance de obra</a></div>
       </div>
+    )}
+    {media.exteriorTour && (
+      <section class="section-inline" id="exteriores" aria-labelledby="titulo-exteriores">
+        <div class="section-heading">
+          <div>
+            <h2 id="titulo-exteriores">Recorrido exterior</h2>
+            <p>Explora la avenida principal y la calle residencial del entorno proyectado.</p>
+          </div>
+          {parkPictures.length > 0 && <a class="text-link" href="#parques">Ver parques y áreas verdes</a>}
+        </div>
+        <TourPlayer tour={media.exteriorTour} label="Iniciar recorrido exterior" tracking />
+        {parkPictures.length > 0 && (
+          <section class="section-inline tour-park" id="parques">
+            <h3>Parques y áreas verdes</h3>
+            <Gallery pictures={parkPictures} featured />
+          </section>
+        )}
+      </section>
     )}
     {media.gallery.length > 0 && <div class="section-inline"><h2>Galería del proyecto</h2><Gallery pictures={media.gallery} /></div>}
     {media.model && <div class="section-inline"><h2>Maqueta digital</h2><TourPlayer tour={media.model} label="Explorar maqueta" /></div>}

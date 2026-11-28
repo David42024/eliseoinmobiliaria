@@ -326,7 +326,8 @@ input:not([type=checkbox]), select { width: 100%; min-height: 44px; color: var(-
 .tour-hotspot:hover::before, .tour-hotspot:focus-visible::before { transform: scale(1.15); background: #294539cc; }
 .tour-hotspot:hover span, .tour-hotspot:focus-visible span { opacity: 1; }
 .tour-hotspot:focus-visible { outline: 2px solid #fff; outline-offset: -3px; }
-#departamento { scroll-margin-top: 5rem; }
+#departamento, #exteriores, #parques { scroll-margin-top: 5rem; }
+.tour-park .gallery-featured > a:first-child img { aspect-ratio: auto; }
 .tour-status:empty { display: none; }
 .tour-player > a { margin-top: .75rem; }
 

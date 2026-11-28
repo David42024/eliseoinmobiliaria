@@ -42,6 +42,7 @@ export const media = settings as {
   cover: Picture | null;
   gallery: Picture[];
   tour: Tour | null;
+  exteriorTour?: Tour | null;
   model: Tour | null;
   typologies: Record<string, PropertyMedia>;
   spaces?: Record<string, Picture[]>;
