@@ -21,6 +21,10 @@ export async function renderInteractiveTour(stage: HTMLElement, tour: Tour, stat
     const { clientWidth, clientHeight } = viewport;
     if (!clientWidth || !clientHeight) return;
     camera.aspect = clientWidth / clientHeight;
+    if (tour.kind === 'panorama') {
+      const verticalFovFor90DegreesAcross = THREE.MathUtils.radToDeg(2 * Math.atan(1 / camera.aspect));
+      camera.fov = Math.max(70, verticalFovFor90DegreesAcross);
+    }
     camera.updateProjectionMatrix();
     renderer.setSize(clientWidth, clientHeight);
     render();
