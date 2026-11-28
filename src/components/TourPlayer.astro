@@ -7,7 +7,7 @@ const firstPanorama = tour.kind === 'panorama' ? tour.scenes[0] : undefined;
 ---
 <div class="tour-player" data-tour={JSON.stringify(tour)} data-tracking={String(tracking)}>
   <div class="tour-poster" data-tour-poster>
-    {tour.poster ? <img src={tour.poster.src} srcset={tour.poster.srcset} sizes="(max-width: 760px) 100vw, 850px" width={tour.poster.width} height={tour.poster.height} alt={tour.poster.alt} loading="lazy" /> : <ScanLine size={56} stroke-width={1} />}
+    {tour.poster ? <img src={tour.poster.src} srcset={tour.poster.srcset} sizes="(max-width: 760px) calc(100vw - 40px), (max-width: 1376px) calc(100vw - 96px), 1280px" width={tour.poster.width} height={tour.poster.height} alt={tour.poster.alt} loading="lazy" /> : <ScanLine size={56} stroke-width={1} />}
     {!(tour.kind === 'iframe' && tour.embed === false) && <button type="button" class="button light" data-tour-start><Play size={19} /> {label}</button>}
   </div>
   <div class="tour-stage" data-tour-stage hidden></div>
@@ -15,7 +15,7 @@ const firstPanorama = tour.kind === 'panorama' ? tour.scenes[0] : undefined;
   {hasSource && <a class="text-link" href={tour.src} target="_blank" rel="noopener noreferrer" data-tour-open>Abrir en otra pestaña <ExternalLink size={15} /></a>}
   {firstPanorama && (
     <a class="text-link" href={firstPanorama.src} data-tour-panorama target="_blank" rel="noopener noreferrer">
-      Abrir imagen panorámica <ExternalLink size={15} />
+      <span>{firstPanorama.kind === 'image' ? 'Abrir imagen en máxima resolución' : 'Abrir imagen panorámica'}</span> <ExternalLink size={15} />
     </a>
   )}
 </div>

@@ -177,33 +177,47 @@
     "kind": "panorama",
     "title": "Recorrido 360° de exteriores",
     "poster": {
-      "src": "/medios/exteriores/vista-aerea.webp",
-      "srcset": "/medios/exteriores/vista-aerea-800.webp 800w, /medios/exteriores/vista-aerea.webp 1600w",
+      "src": "/medios/exteriores/vista-aerea-hd.webp",
+      "srcset": "/medios/exteriores/vista-aerea-800.webp 800w, /medios/exteriores/vista-aerea.webp 1600w, /medios/exteriores/vista-aerea-hd.webp 2814w",
       "alt": "Vista aérea de la ciudad y la costa al atardecer",
-      "width": 1600,
-      "height": 873
+      "width": 2814,
+      "height": 1536
     },
     "scenes": [
       {
         "id": "avenida-principal",
         "title": "Avenida principal",
         "group": "Exteriores",
-        "src": "/panoramas/exteriores/avenida-principal.webp",
+        "src": "/panoramas/exteriores/avenida-principal.jpg",
         "yaw": -90,
         "pitch": -4,
         "hotspots": [
-          { "target": "calle-residencial", "label": "Ir a Calle residencial", "yaw": -114, "pitch": -20 }
+          { "target": "calle-residencial", "label": "Ir a Calle residencial", "yaw": -114, "pitch": -20 },
+          { "target": "parques-y-areas-verdes", "label": "Ir a Parques y áreas verdes", "yaw": -64, "pitch": -18 }
         ]
       },
       {
         "id": "calle-residencial",
         "title": "Calle residencial",
         "group": "Exteriores",
-        "src": "/panoramas/exteriores/calle-residencial.webp",
+        "src": "/panoramas/exteriores/calle-residencial-hd.webp",
         "yaw": -140,
         "pitch": -5,
         "hotspots": [
-          { "target": "avenida-principal", "label": "Ir a Avenida principal", "yaw": -166, "pitch": -22 }
+          { "target": "avenida-principal", "label": "Ir a Avenida principal", "yaw": -166, "pitch": -22 },
+          { "target": "parques-y-areas-verdes", "label": "Ir a Parques y áreas verdes", "yaw": -113, "pitch": -17 }
+        ]
+      },
+      {
+        "id": "parques-y-areas-verdes",
+        "kind": "image",
+        "title": "Parques y áreas verdes",
+        "group": "Exteriores",
+        "src": "/medios/exteriores/parques-y-areas-verdes.jpg",
+        "alt": "Vista panorámica de un parque con senderos y jardines entre viviendas",
+        "hotspots": [
+          { "target": "avenida-principal", "label": "Ir a Avenida principal", "x": 36, "y": 72 },
+          { "target": "calle-residencial", "label": "Ir a Calle residencial", "x": 68, "y": 66 }
         ]
       }
     ]
@@ -262,6 +276,7 @@
     "parques-y-areas-verdes": [
       {
         "src": "/medios/exteriores/parques-y-areas-verdes.webp",
+        "full": "/medios/exteriores/parques-y-areas-verdes.jpg",
         "srcset": "/medios/exteriores/parques-y-areas-verdes-960.webp 960w, /medios/exteriores/parques-y-areas-verdes.webp 1920w",
         "alt": "Vista de un parque con senderos y jardines entre viviendas",
         "width": 1920,

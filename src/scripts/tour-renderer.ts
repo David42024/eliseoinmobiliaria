@@ -7,12 +7,17 @@ function direction(yaw: number, pitch: number) {
     Math.sin(radians(pitch)), -Math.cos(radians(yaw)) * Math.cos(radians(pitch)));
 }
 
+function fitImage(image: HTMLImageElement, width: number, height: number) {
+  const scale = Math.min(width / image.naturalWidth, height / image.naturalHeight);
+  return { width: image.naturalWidth * scale, height: image.naturalHeight * scale };
+}
+
 export async function renderInteractiveTour(stage: HTMLElement, tour: Tour, status: HTMLElement, fallback: HTMLAnchorElement | null) {
   const viewport = document.createElement('div');
   viewport.className = 'tour-viewport';
   stage.append(viewport);
   const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, tour.kind === 'panorama' ? 2 : 1.5));
   viewport.append(renderer.domElement);
   const camera = new THREE.PerspectiveCamera(70, 1, 0.001, 1000);
   const scene = new THREE.Scene();
@@ -67,13 +72,25 @@ export async function renderInteractiveTour(stage: HTMLElement, tour: Tour, stat
     }
 
     const material = new THREE.MeshBasicMaterial();
-    const sphere = new THREE.SphereGeometry(20, 48, 32);
+    const sphere = new THREE.SphereGeometry(20, 72, 48);
     sphere.scale(-1, 1, 1);
     scene.add(new THREE.Mesh(sphere, material));
     let yaw = 0;
     let pitch = 0;
     let hotspots: { button: HTMLButtonElement; position: THREE.Vector3 }[] = [];
+    const still = document.createElement('div');
+    still.className = 'tour-still';
+    still.tabIndex = -1;
+    still.hidden = true;
+    viewport.append(still);
+    let activePhoto: HTMLImageElement | undefined;
     render = () => {
+      if (activePhoto) {
+        const size = fitImage(activePhoto, viewport.clientWidth, viewport.clientHeight);
+        still.style.width = `${size.width}px`;
+        still.style.height = `${size.height}px`;
+        return;
+      }
       camera.lookAt(direction(yaw, pitch));
       renderer.render(scene, camera);
       const look = direction(yaw, pitch);
@@ -194,26 +211,79 @@ export async function renderInteractiveTour(stage: HTMLElement, tour: Tour, stat
     stage.prepend(toolbar);
     const hint = document.createElement('p');
     hint.className = 'tour-hint';
-    hint.textContent = scenes.some(item => item.hotspots?.length)
-      ? 'Arrastra para mirar alrededor y toca los círculos blancos para cambiar de ambiente. También puedes elegir una escena en el menú.'
-      : 'Arrastra la imagen para mirar alrededor o usa las flechas con el visor enfocado.';
     stage.append(hint);
+    const fallbackLabel = fallback?.querySelector('span');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const textureLoader = new THREE.TextureLoader();
+    let activeScene: Scene | undefined;
     let requested = 0;
+    let fadeLayer: HTMLCanvasElement | undefined;
+    function capturePreviousView() {
+      fadeLayer?.remove();
+      if (!activeScene || reducedMotion.matches) return;
+      const snapshot = document.createElement('canvas');
+      snapshot.width = canvas.width;
+      snapshot.height = canvas.height;
+      const context = snapshot.getContext('2d');
+      if (!context) return;
+      if (activePhoto) {
+        const size = fitImage(activePhoto, snapshot.width, snapshot.height);
+        context.drawImage(activePhoto, (snapshot.width - size.width) / 2,
+          (snapshot.height - size.height) / 2, size.width, size.height);
+      } else {
+        // Draw immediately while the WebGL drawing buffer still contains this frame.
+        render();
+        context.drawImage(canvas, 0, 0);
+      }
+      snapshot.className = 'tour-fade';
+      snapshot.setAttribute('aria-hidden', 'true');
+      viewport.append(snapshot);
+      fadeLayer = snapshot;
+      return snapshot;
+    }
+
     async function show(item: Scene) {
       const request = ++requested;
       menu.value = item.id;
-      if (fallback) fallback.href = item.src;
-      status.textContent = 'Cargando vista panorámica…';
+      if (item === activeScene) {
+        status.textContent = '';
+        return;
+      }
+      status.textContent = 'Cargando escena…';
+      let photo: HTMLImageElement | undefined;
+      let texture: THREE.Texture | undefined;
       try {
-        const texture = await new THREE.TextureLoader().loadAsync(item.src);
-        if (request !== requested) { texture.dispose(); return; }
-        texture.colorSpace = THREE.SRGBColorSpace;
-        texture.wrapS = THREE.RepeatWrapping;
+        if (item.kind === 'image') {
+          photo = new Image();
+          photo.alt = item.alt;
+          photo.src = item.src;
+          await photo.decode();
+        } else {
+          texture = await textureLoader.loadAsync(item.src);
+          texture.colorSpace = THREE.SRGBColorSpace;
+          texture.wrapS = THREE.RepeatWrapping;
+          texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+        }
+        if (request !== requested || events.signal.aborted) { texture?.dispose(); return; }
+        const previous = capturePreviousView();
         material.map?.dispose();
-        material.map = texture;
+        material.map = texture ?? null;
         material.needsUpdate = true;
-        const hotspotHadFocus = hotspots.some(({ button }) => button === document.activeElement);
+        const hotspotHadFocus = viewport.contains(document.activeElement) && document.activeElement !== canvas;
         hotspots.forEach(({ button }) => button.remove());
+        still.replaceChildren(...(photo ? [photo] : []));
+        activePhoto = photo;
+        still.hidden = !photo;
+        canvas.hidden = Boolean(photo);
+        controls.style.visibility = photo ? 'hidden' : '';
+        if (fallback) fallback.href = item.src;
+        if (fallbackLabel) fallbackLabel.textContent = photo
+          ? 'Abrir imagen en máxima resolución' : 'Abrir imagen panorámica';
+        hint.textContent = photo
+          ? 'Toca los círculos blancos o elige otra escena en el menú.'
+          : item.hotspots?.length
+            ? 'Arrastra para mirar alrededor y toca los círculos blancos para cambiar de escena. También puedes usar el menú.'
+            : 'Arrastra la imagen para mirar alrededor o usa las flechas con el visor enfocado.';
         hotspots = (item.hotspots || []).flatMap(hotspot => {
           const target = scenes.find(candidate => candidate.id === hotspot.target);
           if (!target) return [];
@@ -226,17 +296,34 @@ export async function renderInteractiveTour(stage: HTMLElement, tour: Tour, stat
           caption.setAttribute('aria-hidden', 'true');
           button.append(caption);
           button.addEventListener('click', () => { void show(target).catch(() => {}); });
+          if ('x' in hotspot) {
+            button.style.left = `${hotspot.x}%`;
+            button.style.top = `${hotspot.y}%`;
+            still.append(button);
+            return [];
+          }
           viewport.append(button);
           return [{ button, position: direction(hotspot.yaw, hotspot.pitch).multiplyScalar(10) }];
         });
-        startYaw = item.yaw ?? 0;
-        startPitch = THREE.MathUtils.clamp(item.pitch ?? 0, -85, 85);
+        startYaw = item.kind === 'image' ? 0 : item.yaw ?? 0;
+        startPitch = item.kind === 'image' ? 0 : THREE.MathUtils.clamp(item.pitch ?? 0, -85, 85);
         resetView();
-        if (hotspotHadFocus) canvas.focus({ preventScroll: true });
+        activeScene = item;
+        if (hotspotHadFocus) (photo ? still : canvas).focus({ preventScroll: true });
+        if (previous) {
+          const remove = () => {
+            previous.remove();
+            if (fadeLayer === previous) fadeLayer = undefined;
+          };
+          const transition = previous.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: 'ease-out' });
+          void transition.finished.then(remove, remove);
+        }
         status.textContent = '';
       } catch (error) {
-        if (request === requested) status.textContent = 'La escena no pudo cargar. Selecciona otra vista o abre la imagen panorámica.';
-        if (!material.map && request === requested) throw error;
+        if (request !== requested) return;
+        if (!activeScene) throw error;
+        menu.value = activeScene.id;
+        status.textContent = 'La escena no pudo cargar. Puedes reintentar o seleccionar otra vista.';
       }
     }
     menu.addEventListener('change', () => {

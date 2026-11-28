@@ -8,15 +8,16 @@ export type Picture = {
   width: number;
   height: number;
 };
+type SceneHotspot = { label: string; target: string };
 export type Scene = {
   id: string;
   title: string;
   group: string;
   src: string;
-  yaw?: number;
-  pitch?: number;
-  hotspots?: { label: string; target: string; yaw: number; pitch: number }[];
-};
+} & (
+  { kind?: 'panorama'; yaw?: number; pitch?: number; hotspots?: (SceneHotspot & { yaw: number; pitch: number })[] }
+  | { kind: 'image'; alt: string; hotspots?: (SceneHotspot & { x: number; y: number })[] }
+);
 export type Tour = {
   title: string;
   poster?: Picture;

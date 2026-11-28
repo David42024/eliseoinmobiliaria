@@ -5,7 +5,6 @@ import PageIntro from '../components/PageIntro.astro';
 import TourPlayer from '../components/TourPlayer.astro';
 import Gallery from '../components/Gallery.astro';
 import { media } from '../data/media';
-const parkPictures = media.spaces?.['parques-y-areas-verdes'] ?? [];
 ---
 <Site title="Tour virtual 360° | La Nueva Estancia · Elíseo" description="Explora el interior de un departamento de La Nueva Estancia y las vistas del entorno proyectado.">
   <PageIntro title="Tour virtual 360°" section="Tour 360°" description="Recorre un departamento y explora los exteriores de La Nueva Estancia." />
@@ -37,17 +36,10 @@ const parkPictures = media.spaces?.['parques-y-areas-verdes'] ?? [];
         <div class="section-heading">
           <div>
             <h2 id="titulo-exteriores">Recorrido exterior</h2>
-            <p>Explora la avenida principal y la calle residencial del entorno proyectado.</p>
+            <p>Explora la avenida principal, la calle residencial y las áreas verdes del entorno proyectado.</p>
           </div>
-          {parkPictures.length > 0 && <a class="text-link" href="#parques">Ver parques y áreas verdes</a>}
         </div>
         <TourPlayer tour={media.exteriorTour} label="Iniciar recorrido exterior" tracking />
-        {parkPictures.length > 0 && (
-          <section class="section-inline tour-park" id="parques">
-            <h3>Parques y áreas verdes</h3>
-            <Gallery pictures={parkPictures} featured />
-          </section>
-        )}
       </section>
     )}
     {media.gallery.length > 0 && <div class="section-inline"><h2>Galería del proyecto</h2><Gallery pictures={media.gallery} /></div>}
